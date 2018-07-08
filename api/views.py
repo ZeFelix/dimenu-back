@@ -15,7 +15,7 @@ class CompanyList(APIView):
     """
 
     def get(self, request, format = None):
-        companies = Company.objects.all()
+        companies = Company.objects.all().order_by('pk')
         serializer = CompanySerializer(companies, many = True)
         return Response(serializer.data)
 
