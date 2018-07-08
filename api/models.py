@@ -109,7 +109,7 @@ class Order(models.Model):
     updated_at = models.DateTimeField('Updated at', auto_now=True)
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 class ProductOrder(models.Model):
     quantity = models.IntegerField(default=1)
