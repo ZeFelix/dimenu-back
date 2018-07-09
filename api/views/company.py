@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import *
-from .serializers import *
+from api.models import *
+from api.serializers import CompanySerializer
 from django.http import Http404, JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -28,6 +28,9 @@ class CompanyList(APIView):
 
 
 class CompanyDetail(APIView):
+    """
+    View para acessar atributos via id da empresa
+    """
     def get_object(self, pk):
         try:
             return Company.objects.get(pk = pk)
