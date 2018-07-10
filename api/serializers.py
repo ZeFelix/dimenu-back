@@ -35,3 +35,9 @@ class CustomUserSerializer(WritableNestedModelSerializer):
         fields = ['id','password','username','first_name','email','cpf','phone','is_client','is_owner','company','is_staff','user_permissions','groups'] 
     password = serializers.CharField(write_only = True, required = False, allow_null = True)
     email = serializers.EmailField(validators=[UniqueValidator(queryset=CustomUser.objects.all())])
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id','name', 'company']
