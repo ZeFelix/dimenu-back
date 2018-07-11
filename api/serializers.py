@@ -6,6 +6,41 @@ from django.contrib.auth.models import Permission, Group
 # realiza as relações de muitos relacionamentos
 from drf_writable_nested import WritableNestedModelSerializer
 
+class Base64ImageField(serializers.ImageField):
+    """
+    Classe para converter imagem base 64 enviado ao servidor
+    """
+
+    def to_internal_value(self, data):
+        from django.core.files.base import ContentFile
+        import base64
+        import six
+        import uuid
+
+        if isinstance(data, six.string_types):
+            if 'data:' in data and ';base64,' in data:
+                header, data = data.split(';base64,')
+
+            try:
+                decoded_file = base64.b64decode(data)
+            except TypeError:
+                self.fail('invalid_image')
+
+            file_name = str(uuid.uuid4())[:12] # 12 characters are more than enough.
+            file_extension = self.get_file_extension(file_name, decoded_file)
+            complete_file_name = "%s.%s" % (file_name, file_extension, )
+            data = ContentFile(decoded_file, name=complete_file_name)
+
+        return super(Base64ImageField, self).to_internal_value(data)
+
+    def get_file_extension(self, file_name, decoded_file):
+        import imghdr
+
+        extension = imghdr.what(file_name, decoded_file)
+        extension = "jpg" if extension == "jpeg" else extension
+
+        return extension
+
 class GroupSerializer(serializers.ModelSerializer):
     """
     Grupo de permissões do django
@@ -30,14 +65,24 @@ class CompanySerializer(serializers.ModelSerializer):
 class CustomUserSerializer(WritableNestedModelSerializer):
     user_permissions = PermissionSerializer(many=True)
     groups = GroupSerializer(many=True)
-    class Meta:
-        model = CustomUser
-        fields = ['id','password','username','first_name','email','cpf','phone','is_client','is_owner','company','is_staff','user_permissions','groups'] 
+
     password = serializers.CharField(write_only = True, required = False, allow_null = True)
     email = serializers.EmailField(validators=[UniqueValidator(queryset=CustomUser.objects.all())])
 
+    class Meta:
+        model = CustomUser
+        fields = ['id','password','username','first_name','email','cpf','phone','is_client','is_owner','company','is_staff','user_permissions','groups'] 
+    
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id','name', 'company']
+
+
+class AttributeSerializer(serializers.ModelSerializer):
+    image = Base64ImageField(max_length = None,use_url = True)
+
+    class Meta:
+        model = Attribute
+        fields = ['id','status','is_additional','image','company']
