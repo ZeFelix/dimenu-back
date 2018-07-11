@@ -47,7 +47,7 @@ class CategoryDetail(APIView):
         
         category = self.get_object(company_id, pk)
         request.data["company"] = company_id
-        serializer = CategorySerializer(category, data = request.data)        
+        serializer = CategorySerializer(category, data = request.data, partial=True)        
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

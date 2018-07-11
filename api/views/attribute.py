@@ -45,9 +45,19 @@ class AttributeDetail(APIView):
         serializer = AttributeSerializer(attribute)
         return Response(serializer.data)
 
+    def patch(self, request, company_id, pk):
+        attribute = self.get_object(company_id, pk)
+        request.data['company'] = company_id
+        serializer = AttributeSerializer(attribute, data = request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+    
     def put(self, request, company_id, pk):
         attribute = self.get_object(company_id, pk)
-        serializer = AttributeSerializer(attribute, data = request.data)
+        request.data['company'] = company_id
+        serializer = AttributeSerializer(attribute, data = request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

@@ -64,16 +64,8 @@ class CustomUserDetail(APIView):
                 return JsonResponse({'detail':'ID must be greater than zero.'}, status=status.HTTP_400_BAD_REQUEST)            
             user = CustomUser.objects.filter(company__id=company_id).get(pk=pk)
             request.data['company'] = company_id
-            """
-            Verifica se o password é nulo se for remove para não mudar a senha atual
-            se não for nulo encripgrafica a nova senha para ser atualizada
-            """
-            if request.data['password'] == None:
-                del request.data['password']
-            else:
-                request.data['password'] = make_password(request.data['password'])
-                
-            serializer = CustomUserSerializer(user,data=request.data)
+            
+            serializer = CustomUserSerializer(user,data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
