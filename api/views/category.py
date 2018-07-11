@@ -33,14 +33,19 @@ class CategoryDetail(APIView):
             return Category.objects.get(company = company_id, pk = pk)
         except Category.DoesNotExist:
             raise Http404
+            
     def get(self, request, company_id, pk):
         category = self.get_object(company_id, pk)
         serializer = CategorySerializer(category)
         return Response(serializer.data)
 
     def put(self, request, company_id, pk):
+        if pk == '0' or company_id == '0':
+            return JsonResponse({'detail':'ID must be greater than zero.'}, status=status.HTTP_400_BAD_REQUEST)
+        
         category = self.get_object(company_id, pk)
-        serializer = CategorySerializer(category, data = request.data)
+        request.data["company"] = company_id
+        serializer = CategorySerializer(category, data = request.data)        
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
