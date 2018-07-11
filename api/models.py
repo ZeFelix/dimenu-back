@@ -17,6 +17,7 @@ class Company(models.Model):
     
     class Meta:
         verbose_name_plural = "Companies"
+        ordering = ["fantasy_name"]
 
 class CustomUser(User):
     cpf = models.CharField('CPF',max_length=12)
@@ -58,6 +59,7 @@ class Attribute(models.Model):
 
     class Meta:
         unique_together = ("company","name")
+        ordering = ["name"]
 
 
 class Category(models.Model):
@@ -73,6 +75,7 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = "Categories"
         unique_together = ("company","name")
+        ordering = ["name"]
 
 class Product(models.Model):
     name = models.CharField("Name of the product",max_length=45)
@@ -93,6 +96,7 @@ class Product(models.Model):
 
     class Meta:
         unique_together = ("company","name")
+        ordering = ["name"]
 
 class Order(models.Model):
     to_do = models.BooleanField('Order: to do', default=True)
