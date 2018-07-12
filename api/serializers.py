@@ -81,8 +81,16 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class AttributeSerializer(serializers.ModelSerializer):
-    image = Base64ImageField(max_length = None,use_url = True)
+    image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)
 
     class Meta:
         model = Attribute
-        fields = ['id','status','is_additional','image','company']
+        fields = ['id','name','status','is_additional','image','company']
+
+class ProductSerializer(serializers.ModelSerializer):
+    image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)
+    product_attributes = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Attribute.objects.all(), source='product_attribute')
+
+    class Meta:
+        model = Product
+        fields = ["id","name", "description", "price", "status", "image", "company", "category","product_attributes"]
