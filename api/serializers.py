@@ -99,3 +99,8 @@ class TableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Table
         fields = ['identification', 'qrcode', 'company']
+
+class AvaliationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Avaliation
+        fields = ['note', 'user', 'product', 'company']
