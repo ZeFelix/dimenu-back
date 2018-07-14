@@ -131,4 +131,4 @@ class Avaliation(models.Model):
     note = models.IntegerField()
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company,on_delete=models.CASCADE, default=None)
