@@ -4,6 +4,7 @@ from api.views.user import CustomUserList,CustomUserDetail
 from api.views.category import CategoryList, CategoryDetail
 from api.views.attribute import AttributeList, AttributeDetail
 from api.views.product import ProductList, ProductDetail
+from api.views.table import TableList, TableDetail
 
 urlpatterns = [
     path('companies', CompanyList.as_view()),
@@ -16,4 +17,6 @@ urlpatterns = [
     path('companies/<int:company_id>/attributes/<int:pk>', AttributeDetail.as_view()),
     path('companies/<int:company_id>/products',ProductList.as_view()),
     path('companies/<int:company_id>/products/<int:pk>',ProductDetail.as_view()),
+    path('companies/<int:company_id>/tables', TableList.as_view()),
+    path('companies/<int:company_id>/tables/<int:pk>', TableDetail.as_view())
 ]

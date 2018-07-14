@@ -94,3 +94,8 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ["id","name", "description", "price", "status", "image", "company", "category","product_attributes"]
+
+class TableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Table
+        fields = ['identification', 'qrcode', 'company']
