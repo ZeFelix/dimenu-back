@@ -7,6 +7,9 @@ from rest_framework.response import Response
 from rest_framework import status
 
 class AvaliationList(APIView):
+    """
+    Lista as avaliações de produtos da empresa e possibilita criar avaliações
+    """
     def get(self, request,  company_id):
         avaliations = Avaliation.objects.filter(company = company_id)
         serializer = AvaliationSerializer(avaliations, many = True)
@@ -24,3 +27,35 @@ class AvaliationList(APIView):
             return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
         except Exception as a:
             return JsonResponse({'detail': 'An error ocurred on the server'+str(a)}, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    
+class AvaliationDetail(APIView):
+    """
+    Mostra detalhes sobre uma avaliação;
+    Possibilita editar e apagar avaliações.
+    """
+
+    def getObject(self, company_id, pk):
+        try:
+            return Avaliation.objects.get(company = company_id, pk = pk)
+        except Avaliation.DoesNotExist:
+            raise Http404
+
+    def get(self, request, company_id, pk):
+        avaliation = self.getObject(company_id, pk)
+        serializer = AvaliationSerializer(avaliation)
+        return Response(serializer.data)
+
+    def put(self, request, company_id, pk):
+        avaliation = self.getObject(company_id, pk)
+        request.data['company'] = company_id
+        serializer = AvaliationSerializer(avaliation, data = request.data, partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, company_id, pk):
+        avaliation = self.getObject(company_id, pk)
+        avaliation.delete()
+        return Response(status = status.HTTP_204_NO_CONTENT)
