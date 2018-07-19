@@ -62,9 +62,9 @@ class CompanySerializer(serializers.ModelSerializer):
         model = Company
         fields = ('id', 'fantasy_name', 'cnpj', 'email', 'phone', 'qrcode_identification')
     
-class CustomUserSerializer(WritableNestedModelSerializer):
-    user_permissions = PermissionSerializer(many=True)
-    groups = GroupSerializer(many=True)
+class CustomUserSerializer(serializers.ModelSerializer):
+    user_permissions = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Permission.objects.all())
+    groups = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Group.objects.all())
 
     password = serializers.CharField(write_only = True, required = False, allow_null = True)
     email = serializers.EmailField(validators=[UniqueValidator(queryset=CustomUser.objects.all())])
@@ -89,11 +89,11 @@ class AttributeSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)
-    product_attributes = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Attribute.objects.all(), source='product_attribute')
+    attribute = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Attribute.objects.all())
 
     class Meta:
         model = Product
-        fields = ["id","name", "description", "price", "status", "image", "company", "category","product_attributes"]
+        fields = ["id","name", "description", "price", "status", "image", "company", "category","attribute"]
 
 class TableSerializer(serializers.ModelSerializer):
     class Meta:
