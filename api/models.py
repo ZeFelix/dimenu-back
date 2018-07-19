@@ -86,7 +86,7 @@ class Product(models.Model):
     company = models.ForeignKey(Company,on_delete=models.CASCADE)
     category = models.ForeignKey(Category,on_delete=models.CASCADE)
 
-    product_attribute = models.ManyToManyField(Attribute)
+    attribute = models.ManyToManyField(Attribute)
 
     created_at = models.DateTimeField('Created at', auto_now_add=True)
     updated_at = models.DateTimeField('Updated at', auto_now=True)
