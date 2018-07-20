@@ -27,7 +27,7 @@ urlpatterns = [
     path('companies/<int:company_id>/tables', TableList.as_view()),
     path('companies/<int:company_id>/tables/<int:pk>', TableDetail.as_view()),
     path('companies/<int:company_id>/orders',OrderList.as_view()),
-    path('companies/<int:company_id>/orders/<int:pk>',OrderDetail.as_view())
+    path('companies/<int:company_id>/orders/<int:pk>',OrderDetail.as_view()),
     path('companies/<int:company_id>/avaliations', AvaliationList.as_view()),
     path('companies/<int:company_id>/avaliations/<int:pk>', AvaliationDetail.as_view())
 ]

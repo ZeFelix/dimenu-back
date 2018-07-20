@@ -92,7 +92,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'cardapio',
         'USER': 'postgres',
-        'PASSWORD': 'amc',
+        'PASSWORD': 'joseph',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
