@@ -104,3 +104,26 @@ class AvaliationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Avaliation
         fields = ['note', 'user', 'product', 'company']
+
+
+class OrderAttributeSerializer(serializers.ModelSerializer):
+    order_attribute_id = serializers.IntegerField(source='id', required=False)
+
+    class Meta:
+        model = OrderAttribute
+        fields = ['order_attribute_id','status','quantity','attribute']
+
+class ProductOrderSerializer(serializers.ModelSerializer):
+    product_order_id = serializers.IntegerField(source='id', required=False)
+
+    class Meta:
+        model = ProductOrder
+        fields = ['product_order_id','quantity','product']
+
+class OrderSerializer(WritableNestedModelSerializer):
+    product = ProductOrderSerializer(source='productorder_set',many=True)
+    attribute = OrderAttributeSerializer(source='orderattribute_set',many=True)
+
+    class Meta:
+        model = Order
+        fields = ['id','to_do','doing','done','user','company','table','product','attribute']

@@ -5,6 +5,8 @@ from django.http import Http404, JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.core.exceptions import ObjectDoesNotExist
+
 
 class TableList(APIView):
     def get(self, request, company_id):
@@ -30,7 +32,7 @@ class TableDetail(APIView):
     def get_object(self, company_id, pk):
         try:
             return Table.objects.get(company = company_id, pk = pk)
-        except Attribute.DoesNotExist:
+        except Table.DoesNotExist:
             raise Http404
     
     def get(self, request, company_id, pk):

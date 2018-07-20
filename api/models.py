@@ -45,7 +45,7 @@ class Table(models.Model):
 
 class Attribute(models.Model):
     name = models.CharField('Name of the attribute',max_length=45)
-    status = models.BooleanField('Status of the attribute')
+    status = models.BooleanField('Status of the attribute',default=True)
     is_additional = models.BooleanField('Indicates if an item is additional')
     image = models.ImageField(upload_to='attributes/%Y/%m/%d', blank=True, null=True)
 
@@ -81,7 +81,7 @@ class Product(models.Model):
     name = models.CharField("Name of the product",max_length=45)
     description = models.TextField('Description of the product')
     price = models.DecimalField("Price of the product",max_digits=6,decimal_places=2)
-    status = models.BooleanField('Status of the product')
+    status = models.BooleanField('Status of the product',default=True)
     image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True, null=True)
     company = models.ForeignKey(Company,on_delete=models.CASCADE)
     category = models.ForeignKey(Category,on_delete=models.CASCADE)
@@ -103,7 +103,7 @@ class Order(models.Model):
     doing = models.BooleanField('Order: doing',default=False)
     done = models.BooleanField('Order: done', default=False)
     company = models.ForeignKey(Company,on_delete=models.CASCADE)
-    table = models.ForeignKey(Table, on_delete=models.CASCADE)
+    table = models.ForeignKey(Table, on_delete=models.CASCADE, blank=True, null=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     product = models.ManyToManyField(Product,through='ProductOrder')
@@ -122,8 +122,8 @@ class ProductOrder(models.Model):
 
 class OrderAttribute(models.Model):
     quantity = models.IntegerField(default=1)
-    #true: removido, false: adicionado
-    status = models.BooleanField('Indicates whether the attribute was removed and added to this order')
+    #true: adicionado, false: removido
+    status = models.BooleanField('Indicates whether the attribute was removed and added to this order',default=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
 

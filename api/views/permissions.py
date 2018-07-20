@@ -9,6 +9,9 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class PermissionList(APIView):
+    """
+    List all Permissions
+    """
 
     def get(self, request):
         permissions = Permission.objects.filter(content_type__app_label='api')
@@ -16,6 +19,9 @@ class PermissionList(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class PermissionDetail(APIView):
+    """
+    List a permission details
+    """
 
     def get(self, request, pk):
         try:
@@ -27,6 +33,9 @@ class PermissionDetail(APIView):
         
 
 class GroupList(APIView):
+    """
+    List all groups
+    """
     
     def  get(self, request):
         groups = Group.objects.all()
@@ -35,7 +44,9 @@ class GroupList(APIView):
             
 
 class GroupDetail(APIView):
-
+    """
+    list a groups details
+    """
     def get(self, request, pk):
         try:
             permission = Group.objects.get(pk=pk)

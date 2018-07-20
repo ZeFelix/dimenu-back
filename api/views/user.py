@@ -66,12 +66,13 @@ class CustomUserDetail(APIView):
             request.data['company'] = company_id
             
             """ 
-            Verifica se o password é nulo se for remove para não mudar a senha atual 
-            se não for nulo encripgrafica a nova senha para ser atualizada 
+            Verifica se existe a chave password:
+                Verifica se o password é nulo se for remove para não mudar a senha atual 
+                se não for nulo encripgrafica a nova senha para ser atualizada 
             """ 
-            if request.data['password'] == None: 
+            if 'password' in request.data and request.data['password'] == None: 
                 del request.data['password'] 
-            else: 
+            elif 'password' in request.data: 
                 request.data['password'] = make_password(request.data['password']) 
 
             serializer = CustomUserSerializer(user,data=request.data, partial=True)

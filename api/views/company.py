@@ -5,6 +5,7 @@ from django.http import Http404, JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # Create your views here.
@@ -51,7 +52,11 @@ class CompanyDetail(APIView):
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format = None):
-        company = self.get_object(pk)
-        company.delete()
-        return Response(status = status.HTTP_204_NO_CONTENT)
+        try:
+            company = self.get_object(pk)
+            company.delete()
+            return Response(status = status.HTTP_204_NO_CONTENT)
+        except ObjectDoesNotExist as o:
+            return JsonResponse({'Detail':'Object not exist!'}, status=status.HTTP_400_BAD_REQUEST)
+        
 
