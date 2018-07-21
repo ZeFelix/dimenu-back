@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_jwt',
     'api',
 ]
 
@@ -153,3 +154,17 @@ django_heroku.settings(locals())
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 
 MEDIA_URL = '/media/'
+
+#configurações de permissões do rest framework jwt
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+JWT_AUTH = { 
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+}

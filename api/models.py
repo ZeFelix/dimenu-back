@@ -132,3 +132,6 @@ class Avaliation(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, default=None)
+
+    def __str__(self):
+        return "Avaliation of the user - " + self.user.username

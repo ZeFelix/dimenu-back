@@ -9,7 +9,12 @@ from api.views.table import TableList, TableDetail
 from api.views.avaliation import AvaliationList, AvaliationDetail
 from api.views.order import OrderList, OrderDetail
 
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+
 urlpatterns = [
+    path('token',TokenObtainPairView.as_view()),
+    path('token/refresh',TokenRefreshView.as_view()),
     path('permissions',PermissionList.as_view()),
     path('permissions/<int:pk>',PermissionDetail.as_view()),
     path('permissions/groups',GroupList.as_view()),
