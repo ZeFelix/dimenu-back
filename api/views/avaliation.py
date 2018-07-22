@@ -6,11 +6,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class AvaliationList(APIView):
     """
     Lista as avaliações de produtos da empresa e possibilita criar avaliações
     """
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    authentication_classes = (JWTAuthentication,)
+
 
     def get_queryset(self):
         """
@@ -43,6 +48,9 @@ class AvaliationDetail(APIView):
     Mostra detalhes sobre uma avaliação;
     Possibilita editar e apagar avaliações.
     """
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    authentication_classes = (JWTAuthentication,)
+
 
     def get_queryset(self):
         """

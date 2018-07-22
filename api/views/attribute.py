@@ -6,12 +6,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class AttributeList(APIView):
     """
     Lista,cria todos os atributos dos produtos
     """
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    authentication_classes = (JWTAuthentication,)
+
 
     def get_queryset(self):
         """
@@ -41,6 +46,8 @@ class AttributeDetail(APIView):
     """
     Atualiza, deleta e busca apenas um atributo
     """ 
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
         """

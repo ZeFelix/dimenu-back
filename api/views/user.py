@@ -9,6 +9,8 @@ from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
 #encryptografia
 from django.contrib.auth.hashers import make_password
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class CustomUserList(APIView):
     """
@@ -46,6 +48,9 @@ class CustomUserDetail(APIView):
     get, put and delete a Custom User by pk of a company
     """
     
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    authentication_classes = (JWTAuthentication,)
+
     def get_queryset(self):
         """
         Metodo para verificar as permissões do usuário

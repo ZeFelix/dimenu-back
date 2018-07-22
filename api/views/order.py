@@ -6,8 +6,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class OrderList(APIView):
+    
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    authentication_classes = (JWTAuthentication,)
     
     def get_queryset(self):
         """
@@ -30,6 +35,9 @@ class OrderList(APIView):
 
 class OrderDetail(APIView):
     
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    authentication_classes = (JWTAuthentication,)
+
     def get_queryset(self):
         """
         Metodo para verificar as permissões do usuário
