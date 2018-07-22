@@ -12,6 +12,12 @@ class ProductList(APIView):
     Lista e cria os produtos
     """
 
+    def get_queryset(self):
+        """
+        Metodo para verificar as permissões do usuário
+        """
+        return Product.objects.all()
+
     def get(self, request, company_id):
         try:
             if company_id == '0':
@@ -40,6 +46,12 @@ class ProductDetail(APIView):
     """
     Atualiza, deleta um produto
     """
+
+    def get_queryset(self):
+        """
+        Metodo para verificar as permissões do usuário
+        """
+        return Product.objects.all()
 
     def get(self, request, company_id, pk):
         try:

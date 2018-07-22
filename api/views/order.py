@@ -9,6 +9,12 @@ from django.core.exceptions import ObjectDoesNotExist
 
 class OrderList(APIView):
     
+    def get_queryset(self):
+        """
+        Metodo para verificar as permissões do usuário
+        """
+        return Order.objects.all()
+    
     def get(self, request, company_id):
         orders = Order.objects.filter(company_id=company_id)
         serializer = OrderSerializer(orders, many=True)
@@ -23,6 +29,12 @@ class OrderList(APIView):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class OrderDetail(APIView):
+    
+    def get_queryset(self):
+        """
+        Metodo para verificar as permissões do usuário
+        """
+        return Order.objects.all()
     
     def get(self, request, company_id, pk):
         try:

@@ -45,6 +45,13 @@ class CustomUserDetail(APIView):
     """
     get, put and delete a Custom User by pk of a company
     """
+    
+    def get_queryset(self):
+        """
+        Metodo para verificar as permissões do usuário
+        """
+        return CustomUser.objects.all()
+
     def get (self, request, company_id,pk):
         try:
             if pk == '0' or company_id == '0':

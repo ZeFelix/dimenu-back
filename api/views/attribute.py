@@ -12,6 +12,13 @@ class AttributeList(APIView):
     """
     Lista,cria todos os atributos dos produtos
     """
+
+    def get_queryset(self):
+        """
+        Metodo para verificar as permissões do usuário
+        """
+        return Attribute.objects.all()
+
     def post(self, request, company_id):
         try:
             if company_id == '0':
@@ -34,6 +41,14 @@ class AttributeDetail(APIView):
     """
     Atualiza, deleta e busca apenas um atributo
     """ 
+
+    def get_queryset(self):
+        """
+        Metodo para verificar as permissões do usuário
+        """
+        return Attribute.objects.all()
+
+
     def get_object(self, company_id, pk):
         try:
             return Attribute.objects.get(company = company_id, pk = pk)

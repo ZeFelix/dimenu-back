@@ -15,9 +15,11 @@ class CompanyList(APIView):
     Lista todas as empresas, cria uma nova empresa.
     """
 
+    def get_queryset(self):
+        return Company.objects.all()
+
     def get(self, request, format = None):
-        companies = Company.objects.all()
-        serializer = CompanySerializer(companies, many = True)
+        serializer = CompanySerializer(self.get_queryset(), many = True)
         return Response(serializer.data)
 
     def post(self, request, format = None):
@@ -32,6 +34,14 @@ class CompanyDetail(APIView):
     """
     View para acessar atributos via id da empresa
     """
+
+    def get_queryset(self):
+        """
+        Metodo para verificar as permissões do usuário
+        """
+        return Company.objects.all()
+
+
     def get_object(self, pk):
         try:
             return Company.objects.get(pk = pk)

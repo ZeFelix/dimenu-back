@@ -9,6 +9,14 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class TableList(APIView):
+    
+    def get_queryset(self):
+        """
+        Metodo para verificar as permissões do usuário
+        """
+        return Table.objects.all()
+
+
     def get(self, request, company_id):
         tables = Table.objects.filter(company = company_id)
         serializer = TableSerializer(tables, many = True)
@@ -29,6 +37,14 @@ class TableList(APIView):
 
 
 class TableDetail(APIView):
+    
+    def get_queryset(self):
+        """
+        Metodo para verificar as permissões do usuário
+        """
+        return Table.objects.all()
+
+
     def get_object(self, company_id, pk):
         try:
             return Table.objects.get(company = company_id, pk = pk)

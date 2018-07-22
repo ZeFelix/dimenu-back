@@ -11,6 +11,14 @@ class AvaliationList(APIView):
     """
     Lista as avaliações de produtos da empresa e possibilita criar avaliações
     """
+
+    def get_queryset(self):
+        """
+        Metodo para verificar as permissões do usuário
+        """
+        return Avaliation.objects.all()
+
+
     def get(self, request,  company_id):
         avaliations = Avaliation.objects.filter(company = company_id)
         serializer = AvaliationSerializer(avaliations, many = True)
@@ -35,6 +43,12 @@ class AvaliationDetail(APIView):
     Mostra detalhes sobre uma avaliação;
     Possibilita editar e apagar avaliações.
     """
+
+    def get_queryset(self):
+        """
+        Metodo para verificar as permissões do usuário
+        """
+        return Avaliation.objects.all()
 
     def getObject(self, company_id, pk):
         try:

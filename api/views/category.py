@@ -8,6 +8,12 @@ from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
 
 class CategoryList(APIView):
+    
+    def get_queryset(self):
+        """
+        Metodo para verificar as permissões do usuário
+        """
+        return Category.objects.all()
 
     def get(self, request, company_id, format = None):
         categories = Category.objects.filter(company = company_id)
@@ -30,6 +36,12 @@ class CategoryList(APIView):
 
 
 class CategoryDetail(APIView):
+
+    def get_queryset(self):
+        """
+        Metodo para verificar as permissões do usuário
+        """
+        return Category.objects.all()
 
     def get_object(self, company_id, pk):
         try:
