@@ -6,12 +6,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 class PermissionList(APIView):
     """
     List all Permissions
     """
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (JWTAuthentication, )
 
     def get(self, request):
         permissions = Permission.objects.filter(content_type__app_label='api')
@@ -22,6 +26,8 @@ class PermissionDetail(APIView):
     """
     List a permission details
     """
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (JWTAuthentication, )
 
     def get(self, request, pk):
         try:
@@ -36,6 +42,8 @@ class GroupList(APIView):
     """
     List all groups
     """
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (JWTAuthentication, )
     
     def  get(self, request):
         groups = Group.objects.all()
@@ -47,6 +55,10 @@ class GroupDetail(APIView):
     """
     list a groups details
     """
+
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (JWTAuthentication, )
+    
     def get(self, request, pk):
         try:
             permission = Group.objects.get(pk=pk)
