@@ -44,10 +44,15 @@ class Table(models.Model):
         unique_together = ("company","identification")
 
 class Attribute(models.Model):
+    
+    def attribute_directory_path(instance, filename):
+            # file will be uploaded to MEDIA_ROOT/product/id/<filename>
+        return 'attribute/{0}/{1}'.format(instance.id, filename)  
+
     name = models.CharField('Name of the attribute',max_length=45)
     status = models.BooleanField('Status of the attribute',default=True)
     is_additional = models.BooleanField('Indicates if an item is additional')
-    image = models.ImageField(upload_to='attributes/%Y/%m/%d', blank=True, null=True)
+    image = models.ImageField(upload_to = attribute_directory_path, blank=True, null=True)
 
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
@@ -78,11 +83,16 @@ class Category(models.Model):
         ordering = ["name"]
 
 class Product(models.Model):
+    
+    def product_directory_path(instance, filename):
+        # file will be uploaded to MEDIA_ROOT/product/id/<filename>
+        return 'product/{0}/{1}'.format(instance.id, filename)    
+
     name = models.CharField("Name of the product",max_length=45)
     description = models.TextField('Description of the product')
     price = models.DecimalField("Price of the product",max_digits=6,decimal_places=2)
     status = models.BooleanField('Status of the product',default=True)
-    image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True, null=True)
+    image = models.ImageField(upload_to = product_directory_path, blank=True, null=True)
     company = models.ForeignKey(Company,on_delete=models.CASCADE)
     category = models.ForeignKey(Category,on_delete=models.CASCADE)
 
@@ -97,6 +107,7 @@ class Product(models.Model):
     class Meta:
         unique_together = ("company","name")
         ordering = ["name"]
+    
 
 class Order(models.Model):
     to_do = models.BooleanField('Order: to do', default=True)

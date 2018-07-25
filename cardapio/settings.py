@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'api',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -144,17 +145,33 @@ STATICFILES_DIRS = [
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())
 
 #configuração para midias
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
-
-MEDIA_URL = '/media/'
+#MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 
 #configuração global do prefixo do token
 JWT_AUTH = { 
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 }
+
+#aws amazon s3 configurações para armazenamento no aws amazon
+AWS_ACCESS_KEY_ID = 'AKIAIU4UVBITETVOYNUA'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_S3_REGION_NAME = 'sa-east-1' 
+AWS_STORAGE_BUCKET_NAME = 'digimenu-media'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_LOCATION = 'media'
+
+MEDIA_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+
+MEDIAFILES_LOCATION = 'media'
+
+#Classe com confguração para as medias
+DEFAULT_FILE_STORAGE = 'cardapio.storage_backends.MediaStorage'
