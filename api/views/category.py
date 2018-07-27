@@ -10,6 +10,10 @@ from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class CategoryList(APIView):
+    """
+    Lista,cria todos as Categorias
+    * requerido permissão de acesso e autenticaçã do usuário
+    """
     
     permission_classes = (IsAuthenticated, DjangoModelPermissions,)
     authentication_classes = (JWTAuthentication,)
@@ -41,6 +45,10 @@ class CategoryList(APIView):
 
 
 class CategoryDetail(APIView):
+    """
+    Edita, deleta e detalha uma Categoria
+    * requerido permissão de acesso e autenticaçã do usuário
+    """
     
     permission_classes = (IsAuthenticated, DjangoModelPermissions)
     authentication_classes = (JWTAuthentication,)

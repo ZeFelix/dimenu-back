@@ -12,6 +12,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 class ProductList(APIView):
     """
     Lista e cria os produtos
+    * requerido permissões e autenticação do usuário
     """
 
     permission_classes = (IsAuthenticated, DjangoModelPermissions,)
@@ -50,6 +51,7 @@ class ProductList(APIView):
 class ProductDetail(APIView):
     """
     Atualiza, deleta um produto
+    * requerido permissões e autenticação do usuário
     """
     permission_classes = (IsAuthenticated, DjangoModelPermissions,)
     authentication_classes = (JWTAuthentication,)

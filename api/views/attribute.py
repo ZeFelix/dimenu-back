@@ -13,6 +13,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 class AttributeList(APIView):
     """
     Lista,cria todos os atributos dos produtos
+    * requerido permissão de acesso e autenticaçã do usuário
     """
     permission_classes = (IsAuthenticated, DjangoModelPermissions,)
     authentication_classes = (JWTAuthentication,)
@@ -45,6 +46,7 @@ class AttributeList(APIView):
 class AttributeDetail(APIView):
     """
     Atualiza, deleta e busca apenas um atributo
+    * requerido permissão de acesso e autenticaçã do usuário
     """ 
     permission_classes = (IsAuthenticated, DjangoModelPermissions,)
     authentication_classes = (JWTAuthentication,)

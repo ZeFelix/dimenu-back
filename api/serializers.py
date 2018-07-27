@@ -58,13 +58,15 @@ class PermissionSerializer(serializers.ModelSerializer):
         fields = ['id','name','codename']
 
 class CompanySerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Company
         fields = ('id', 'fantasy_name', 'cnpj', 'email', 'phone', 'qrcode_identification')
     
 class CustomUserSerializer(serializers.ModelSerializer):
-    user_permissions = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Permission.objects.all())
-    groups = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Group.objects.all())
+    user_permissions = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Permission.objects.all())
+    groups = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Group.objects.all())
+    company = serializers.PrimaryKeyRelatedField(required=False, allow_null=True, read_only=False, queryset=Company.objects.all())
 
     password = serializers.CharField(write_only = True, required = False, allow_null = True)
     email = serializers.EmailField(validators=[UniqueValidator(queryset=CustomUser.objects.all())])

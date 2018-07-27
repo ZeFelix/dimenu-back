@@ -9,13 +9,51 @@ from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
 #encryptografia
 from django.contrib.auth.hashers import make_password
-from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
+
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
+
+from django.contrib.auth.models import Group
+
+class CustomUserRegister(APIView):
+    """
+    View para cadastro de usuário owner (dono da empresa) ou usuário mobile
+    is_client = True -> owner 
+    is_client = False -> cliente mobile
+    """
+    
+    def post(self, request):
+        if not request.data["is_client"]:
+            group_owner_ids = list(Group.objects.filter(name="owner").values_list('id', flat=True))
+            request.data["is_owner"] = True
+            request.data["groups"] = group_owner_ids
+        else:
+            group_mobile_ids = list(Group.objects.filter(name="mobile").values_list('id', flat=True))
+            request.data["is_owner"] = False
+            request.data["groups"] = group_mobile_ids
+        
+        request.data["company"] = None
+
+        serializer = CustomUserSerializer(data=request.data)
+        try:
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            return JsonResponse({"detail":"An error occurred on the server"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class CustomUserList(APIView):
     """
     Cria e lista todos os usuário de uma companhia
     """
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    authentication_classes = (JWTAuthentication,)
+
+    def get_queryset(self):
+        return CustomUser.objects.all()
+    
     def post(self, request, company_id):
         try:
             if company_id == '0':
@@ -32,6 +70,7 @@ class CustomUserList(APIView):
             return JsonResponse({"detail":"An error occurred on the server"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def get(self, request, company_id):
+
         try:
             if company_id == '0':
                 return JsonResponse({'detail':'ID must be greater than zero.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -46,6 +85,7 @@ class CustomUserList(APIView):
 class CustomUserDetail(APIView):
     """
     get, put and delete a Custom User by pk of a company
+    * requerido permissões e autenticação do usuário
     """
     
     permission_classes = (IsAuthenticated, DjangoModelPermissions,)

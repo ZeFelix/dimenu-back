@@ -11,6 +11,10 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class TableList(APIView):
+    """
+    Lista e cria as mesas
+    * requerido permissões e autenticação do usuário
+    """
 
     permission_classes = (IsAuthenticated, DjangoModelPermissions,)
     authentication_classes = (JWTAuthentication,)
@@ -42,6 +46,9 @@ class TableList(APIView):
 
 
 class TableDetail(APIView):
+    """
+    Atualiza, deleta e detalha um mesa
+    """
 
     permission_classes = (IsAuthenticated, DjangoModelPermissions,)
     authentication_classes = (JWTAuthentication,)

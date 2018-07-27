@@ -13,6 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 class PermissionList(APIView):
     """
     List all Permissions
+    * requerido permissões e autenticação do usuário
     """
     permission_classes = (IsAuthenticated, )
     authentication_classes = (JWTAuthentication, )
@@ -25,6 +26,7 @@ class PermissionList(APIView):
 class PermissionDetail(APIView):
     """
     List a permission details
+    * requerido permissões e autenticação do usuário
     """
     permission_classes = (IsAuthenticated, )
     authentication_classes = (JWTAuthentication, )

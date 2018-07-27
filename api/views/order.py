@@ -10,6 +10,10 @@ from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class OrderList(APIView):
+    """
+    Lista todas os pedidos, cria um novo pedido.
+    * requerido autenticação e permissão do usuário
+    """
     
     permission_classes = (IsAuthenticated, DjangoModelPermissions,)
     authentication_classes = (JWTAuthentication,)
@@ -34,6 +38,10 @@ class OrderList(APIView):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class OrderDetail(APIView):
+    """
+    Atualiza, deleta e detalha uma compra.
+    * requerido permissões e autenticação do usuário
+    """
     
     permission_classes = (IsAuthenticated, DjangoModelPermissions,)
     authentication_classes = (JWTAuthentication,)

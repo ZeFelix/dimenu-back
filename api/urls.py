@@ -1,7 +1,7 @@
 from django.urls import path
 from api.views.permissions import PermissionList, PermissionDetail, GroupList, GroupDetail
 from api.views.company import CompanyList, CompanyDetail
-from api.views.user import CustomUserList,CustomUserDetail
+from api.views.user import CustomUserList,CustomUserDetail, CustomUserRegister
 from api.views.category import CategoryList, CategoryDetail
 from api.views.attribute import AttributeList, AttributeDetail
 from api.views.product import ProductList, ProductDetail
@@ -21,6 +21,7 @@ urlpatterns = [
     path('permissions/groups/<int:pk>',GroupDetail.as_view()),
     path('companies', CompanyList.as_view()),
     path('companies/<int:pk>', CompanyDetail.as_view()),
+    path('users/register', CustomUserRegister.as_view()),
     path('companies/<int:company_id>/users', CustomUserList.as_view()),
     path('companies/<int:company_id>/users/<int:pk>', CustomUserDetail.as_view()),
     path('companies/<int:company_id>/categories', CategoryList.as_view()),

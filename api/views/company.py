@@ -15,7 +15,10 @@ from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 class CompanyList(APIView):
     """
     Lista todas as empresas, cria uma nova empresa.
+    * requerido autenticação
     """
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
         return Company.objects.all()
@@ -35,6 +38,7 @@ class CompanyList(APIView):
 class CompanyDetail(APIView):
     """
     View para acessar atributos via id da empresa
+    * requerido permissão de acesso e autenticaçã do usuário
     """
     permission_classes = (IsAuthenticated, DjangoModelPermissions,)
     authentication_classes = (JWTAuthentication,)

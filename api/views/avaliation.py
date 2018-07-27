@@ -12,6 +12,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 class AvaliationList(APIView):
     """
     Lista as avaliações de produtos da empresa e possibilita criar avaliações
+    * requerido permissão de acesso e autenticaçã do usuário
     """
     permission_classes = (IsAuthenticated, DjangoModelPermissions,)
     authentication_classes = (JWTAuthentication,)
@@ -47,6 +48,7 @@ class AvaliationDetail(APIView):
     """
     Mostra detalhes sobre uma avaliação;
     Possibilita editar e apagar avaliações.
+    * requerido permissão de acesso e autenticaçã do usuário
     """
     permission_classes = (IsAuthenticated, DjangoModelPermissions,)
     authentication_classes = (JWTAuthentication,)
