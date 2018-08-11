@@ -135,6 +135,8 @@ ALLOWED_HOSTS = ['*']
 #configuração para permitir acesso de qualquer host
 CORS_ORIGIN_ALLOW_ALL = True
 ALLOWED_HOSTS = ['*']
+
+#lita branca
 #CORS_ORIGIN_WHITELIST = ('*','google.com', 'hostname.example.com', 'http//:localhost:8000/', 'http//:localhost:3000/',  '10.42.0.1', '127.0.0.1:9000')
 
 #CORS_ALLOW_HEADERS = ['Origin','X-Requested-With', 'Content-Type','Accept','X-CSRFTOKEN','Authorization']
