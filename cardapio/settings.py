@@ -93,7 +93,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'cardapio',
         'USER': 'postgres',
-        'PASSWORD': 'joseph',
+        'PASSWORD': 'postgres',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -131,6 +131,35 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
+
+#configuração para permitir acesso de qualquer host
+CORS_ORIGIN_ALLOW_ALL = True
+ALLOWED_HOSTS = ['*']
+#CORS_ORIGIN_WHITELIST = ('*','google.com', 'hostname.example.com', 'http//:localhost:8000/', 'http//:localhost:3000/',  '10.42.0.1', '127.0.0.1:9000')
+
+#CORS_ALLOW_HEADERS = ['Origin','X-Requested-With', 'Content-Type','Accept','X-CSRFTOKEN','Authorization']
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+#CORS_ALLOW_METHODS = ['POST','GET','DELETE','OPTIONS','PUT']
+CORS_ALLOW_CREDENTIALS = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/

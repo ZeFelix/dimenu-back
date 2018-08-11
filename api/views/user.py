@@ -47,6 +47,7 @@ class CustomUserRegister(APIView):
 class CustomUserList(APIView):
     """
     Cria e lista todos os usuário de uma companhia
+    requer autenticação e permissão
     """
     permission_classes = (IsAuthenticated, DjangoModelPermissions,)
     authentication_classes = (JWTAuthentication,)
