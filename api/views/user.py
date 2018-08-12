@@ -23,25 +23,27 @@ class CustomUserRegister(APIView):
     """
     
     def post(self, request):
-        if not request.data["is_client"]:
-            group_owner_ids = list(Group.objects.filter(name="owner").values_list('id', flat=True))
-            request.data["is_owner"] = True
-            request.data["groups"] = group_owner_ids
-        else:
-            group_mobile_ids = list(Group.objects.filter(name="mobile").values_list('id', flat=True))
-            request.data["is_owner"] = False
-            request.data["groups"] = group_mobile_ids
-        
-        request.data["company"] = None
-
-        serializer = CustomUserSerializer(data=request.data)
         try:
+
+            if not request.data["is_client"]:
+                group_owner_ids = list(Group.objects.filter(name="owner").values_list('id', flat=True))
+                request.data["is_owner"] = True
+                request.data["groups"] = group_owner_ids
+            else:
+                group_mobile_ids = list(Group.objects.filter(name="mobile").values_list('id', flat=True))
+                request.data["is_owner"] = False
+                request.data["groups"] = group_mobile_ids
+            
+            request.data["company"] = None
+
+            request.data["password"] = make_password(password=request.data["password"])
+            serializer = CustomUserSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            print(e)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        except Exception as a:
+            print (a)
             return JsonResponse({"detail":"An error occurred on the server"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class CustomUserList(APIView):
