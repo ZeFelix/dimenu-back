@@ -2,12 +2,22 @@ from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
 
+class Owner(User):
+    cpf = models.CharField('CPF',max_length=12, unique=True)
+    phone = models.CharField('Phone', max_length=15)
+
+class Client(User):
+    cpf = models.CharField('CPF', max_length=12, unique=True)
+    phone = models.CharField('Phone', max_length=12, unique=True)
+    address = models.CharField("Addres", max_length=12,blank=True, null=True)
+
 class Company(models.Model):
     fantasy_name = models.CharField('Fantasy name', max_length=45, default="company default")
     cnpj = models.CharField('CNPJ', max_length=45, unique=True)
     email = models.EmailField('Email', max_length=45, unique=True)
     phone = models.CharField('Phone',max_length=13)
     qrcode_identification = models.CharField("Qr code for identification",max_length=50, unique=True)
+    owner = models.name = models.ForeignKey(Owner, on_delete=models.CASCADE, blank=True, null=True)
 
     created_at = models.DateTimeField('Created at', auto_now_add=True)
     updated_at = models.DateTimeField('Updated at', auto_now=True)
@@ -19,15 +29,9 @@ class Company(models.Model):
         verbose_name_plural = "Companies"
         ordering = ["fantasy_name"]
 
-class CustomUser(User):
-    cpf = models.CharField('CPF',max_length=12)
-    phone = models.CharField('Phone', max_length=15)
-    is_client = models.BooleanField('Is mobile',default=False)
-    is_owner = models.BooleanField('Is owner',default=False)
-    company = models.ForeignKey(Company,on_delete=models.CASCADE,null=True,blank=True)
-
-    class Meta:
-        unique_together = (("company","cpf"),("is_client","cpf"))
+class Employee(User):
+    cpf = models.CharField('CPF',max_length=25,unique=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, default=None)
 
 class Table(models.Model):
     identification = models.CharField("Table identification",max_length=45)
@@ -115,7 +119,8 @@ class Order(models.Model):
     done = models.BooleanField('Order: done', default=False)
     company = models.ForeignKey(Company,on_delete=models.CASCADE)
     table = models.ForeignKey(Table, on_delete=models.CASCADE, blank=True, null=True)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, default=None)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, blank=True, null=True, default=None)
 
     product = models.ManyToManyField(Product,through='ProductOrder')
     attribute = models.ManyToManyField(Attribute,through='OrderAttribute')
@@ -140,8 +145,8 @@ class OrderAttribute(models.Model):
 
 class Avaliation(models.Model):
     note = models.IntegerField()
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, default=None)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, default=None)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, default=None)
 
     def __str__(self):

@@ -63,18 +63,6 @@ class CompanySerializer(serializers.ModelSerializer):
         model = Company
         fields = ('id', 'fantasy_name', 'cnpj', 'email', 'phone', 'qrcode_identification')
     
-class CustomUserSerializer(serializers.ModelSerializer):
-    user_permissions = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Permission.objects.all())
-    groups = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Group.objects.all())
-    company = serializers.PrimaryKeyRelatedField(required=False, allow_null=True, read_only=False, queryset=Company.objects.all())
-
-    password = serializers.CharField(write_only = True, required = False, allow_null = True)
-    email = serializers.EmailField(validators=[UniqueValidator(queryset=CustomUser.objects.all())])
-
-    class Meta:
-        model = CustomUser
-        fields = ['id','password','username','first_name','email','cpf','phone','is_client','is_owner','company','is_staff','user_permissions','groups'] 
-    
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:

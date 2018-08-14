@@ -2,9 +2,6 @@ from django.contrib import admin
 from .models import *
 
 # Register your models here.
-class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('id','username','is_client')
-
 
 class ProductOrderInline(admin.TabularInline):
     model = ProductOrder
@@ -17,7 +14,6 @@ class AttributeOrderInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     inlines = (ProductOrderInline,AttributeOrderInline,) 
 
-admin.site.register(CustomUser,CustomUserAdmin)
 admin.site.register(Company)
 admin.site.register(Table)
 admin.site.register(Attribute)
