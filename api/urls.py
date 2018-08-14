@@ -7,6 +7,7 @@ from api.views.product import ProductList, ProductDetail
 from api.views.table import TableList, TableDetail
 from api.views.avaliation import AvaliationList, AvaliationDetail
 from api.views.order import OrderList, OrderDetail
+from api.views.owner import RegisterOwner, OwnerDetail
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -31,5 +32,7 @@ urlpatterns = [
     path('companies/<int:company_id>/orders',OrderList.as_view()),
     path('companies/<int:company_id>/orders/<int:pk>',OrderDetail.as_view()),
     path('companies/<int:company_id>/avaliations', AvaliationList.as_view()),
-    path('companies/<int:company_id>/avaliations/<int:pk>', AvaliationDetail.as_view())
+    path('companies/<int:company_id>/avaliations/<int:pk>', AvaliationDetail.as_view()),
+    path('owner/register', RegisterOwner.as_view()),
+    path('owner/<int:pk>',OwnerDetail.as_view())
 ]

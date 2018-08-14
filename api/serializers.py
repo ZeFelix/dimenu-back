@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from api.models import *
-from django.contrib.auth.models import Permission, Group
+from django.contrib.auth.models import Permission, Group, User
 
 # realiza as relações de muitos relacionamentos
 from drf_writable_nested import WritableNestedModelSerializer
@@ -61,7 +61,7 @@ class CompanySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Company
-        fields = ('id', 'fantasy_name', 'cnpj', 'email', 'phone', 'qrcode_identification')
+        fields = ('id', 'fantasy_name', 'cnpj', 'email', 'phone', 'qrcode_identification','owner')
     
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -93,7 +93,7 @@ class TableSerializer(serializers.ModelSerializer):
 class AvaliationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Avaliation
-        fields = ['note', 'user', 'product', 'company']
+        fields = ['note', 'client', 'product', 'company']
 
 
 class OrderAttributeSerializer(serializers.ModelSerializer):
@@ -117,3 +117,16 @@ class OrderSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Order
         fields = ['id','to_do','doing','done','user','company','table','product','attribute']
+
+
+class OwnerSerializer(serializers.ModelSerializer): 
+    user_permissions = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Permission.objects.all()) 
+    groups = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Group.objects.all()) 
+ 
+    password = serializers.CharField(write_only = True) 
+    email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())]) 
+ 
+    class Meta: 
+        model = Owner 
+        fields = ['id','password','username','first_name',"last_name",'email','cpf','phone','is_staff','user_permissions','groups']  
+     

@@ -30,7 +30,6 @@ class OrderList(APIView):
         return Response(serializer.data)
     
     def post(self, request, company_id):
-        print(request.data)
         serializer = OrderSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
