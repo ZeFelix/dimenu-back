@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from api.models import *
-from api.serializers import OwnerSerializer
+from api.serializers import ClientSerializer
 from django.http import Http404, JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -12,7 +12,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth.hashers import make_password 
 from django.contrib.auth.models import Group 
 
-class RegisterOwner(APIView):
+
+class RegisterClient(APIView):
     """
     View para registrar os donos das empresas
     Não precisa autenticação
@@ -21,10 +22,10 @@ class RegisterOwner(APIView):
     def post(self, request):
 
         try:
-            group_owner_ids = list(Group.objects.filter(name="owner").values_list('id', flat=True)) 
-            request.data["groups"] = group_owner_ids 
+            group_client_ids = list(Group.objects.filter(name="client").values_list('id', flat=True)) 
+            request.data["groups"] = group_client_ids
             request.data["password"] = make_password(password=request.data["password"]) 
-            serializer = OwnerSerializer(data=request.data) 
+            serializer = ClientSerializer(data=request.data) 
             if serializer.is_valid(): 
                 serializer.save() 
                 return Response(serializer.data, status=status.HTTP_201_CREATED) 
@@ -34,9 +35,9 @@ class RegisterOwner(APIView):
             return JsonResponse({"detail":"An error occurred on the server"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class OwnerDetail(APIView): 
+class ClientDetail(APIView): 
     """ 
-    get, put and delete a Owner by pk 
+    get, put and delete a Client by pk 
     * requerido permissões e autenticação do usuário 
     """ 
      
@@ -47,14 +48,14 @@ class OwnerDetail(APIView):
         """ 
         Metodo para verificar as permissões do usuário 
         """ 
-        return Owner.objects.all() 
+        return Client.objects.all() 
  
     def get (self, request,pk): 
         try: 
             if pk == '0': 
                 return JsonResponse({'detail':'ID must be greater than zero.'}, status=status.HTTP_400_BAD_REQUEST) 
-            owner = Owner.objects.get(pk=pk) 
-            serializer = OwnerSerializer(owner) 
+            client = Client.objects.get(pk=pk) 
+            serializer = ClientSerializer(client) 
             return Response(serializer.data) 
         except ObjectDoesNotExist as a: 
             return JsonResponse({'user':'Does not exist!'},status=status.HTTP_400_BAD_REQUEST) 
@@ -66,7 +67,7 @@ class OwnerDetail(APIView):
         try: 
             if pk == '0': 
                 return JsonResponse({'detail':'ID must be greater than zero.'}, status=status.HTTP_400_BAD_REQUEST)             
-            owner = Owner.objects.get(pk=pk) 
+            client = Client.objects.get(pk=pk) 
              
             """  
             Verifica se existe a chave password: 
@@ -78,7 +79,7 @@ class OwnerDetail(APIView):
             elif 'password' in request.data:  
                 request.data['password'] = make_password(request.data['password'])  
  
-            serializer = OwnerSerializer(owner,data=request.data, partial=True) 
+            serializer = ClientSerializer(client,data=request.data, partial=True) 
             if serializer.is_valid(): 
                 serializer.save() 
                 return Response(serializer.data) 
@@ -93,8 +94,8 @@ class OwnerDetail(APIView):
         try: 
             if pk == '0': 
                 return JsonResponse({'detail':'ID must be greater than zero.'}, status=status.HTTP_400_BAD_REQUEST)             
-            owner = Owner.objects.get(pk=pk) 
-            owner.delete() 
+            client = Client.objects.get(pk=pk) 
+            client.delete() 
             return Response(status=status.HTTP_204_NO_CONTENT) 
         except ObjectDoesNotExist as a: 
             return JsonResponse({'detail':'User does not exist!'},status=status.HTTP_400_BAD_REQUEST) 

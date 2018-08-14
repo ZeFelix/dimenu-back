@@ -129,4 +129,14 @@ class OwnerSerializer(serializers.ModelSerializer):
     class Meta: 
         model = Owner 
         fields = ['id','password','username','first_name',"last_name",'email','cpf','phone','is_staff','user_permissions','groups']  
-     
+
+class ClientSerializer(serializers.ModelSerializer):
+    user_permissions = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Permission.objects.all()) 
+    groups = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Group.objects.all()) 
+    
+    password = serializers.CharField(write_only = True) 
+    email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])
+
+    class Meta:
+        model = Client
+        fields = ['id','password','username','first_name',"last_name",'email','cpf','phone','address','is_staff','user_permissions','groups']  

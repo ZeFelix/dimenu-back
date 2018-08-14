@@ -6,10 +6,16 @@ class Owner(User):
     cpf = models.CharField('CPF',max_length=12, unique=True)
     phone = models.CharField('Phone', max_length=15)
 
+    class Meta:
+        verbose_name = "Owner"
+
 class Client(User):
     cpf = models.CharField('CPF', max_length=12, unique=True)
     phone = models.CharField('Phone', max_length=12, unique=True)
-    address = models.CharField("Addres", max_length=12,blank=True, null=True)
+    address = models.CharField("Address", max_length=12,blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Client"
 
 class Company(models.Model):
     fantasy_name = models.CharField('Fantasy name', max_length=45, default="company default")
@@ -32,6 +38,9 @@ class Company(models.Model):
 class Employee(User):
     cpf = models.CharField('CPF',max_length=25,unique=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, default=None)
+    
+    class Meta:
+        verbose_name = "Employee"
 
 class Table(models.Model):
     identification = models.CharField("Table identification",max_length=45)
