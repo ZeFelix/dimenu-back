@@ -80,4 +80,18 @@ class OrderDetail(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except ObjectDoesNotExist as o:
             return JsonResponse({'Detail':'Object not exist!'}, status=status.HTTP_400_BAD_REQUEST)
-      
+
+
+class OrderListTable(APIView):
+    """
+    Classe que lista todas as compras daquela mesa
+    """
+
+    def get_queryset(self):
+        return Order.objects.all()
+    
+    def get(self, request, company_id, pk):
+        orders = Order.objects.filter(company=company_id, table=pk)
+        serializers = OrderSerializer(orders, many=True)
+        return Response(serializers.data)
+    

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from api.models import *
-from api.serializers import CategorySerializer
+from api.serializers import CategorySerializer, ProductSerializer
 from django.http import Http404, JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response

@@ -88,12 +88,12 @@ class ProductSerializer(serializers.ModelSerializer):
 class TableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Table
-        fields = ['identification', 'qrcode', 'company']
+        fields = ['id','identification', 'qrcode', 'company']
 
 class AvaliationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Avaliation
-        fields = ['note', 'client', 'product', 'company']
+        fields = ['id','note', 'client', 'product', 'company']
 
 
 class OrderAttributeSerializer(serializers.ModelSerializer):
@@ -101,7 +101,7 @@ class OrderAttributeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderAttribute
-        fields = ['order_attribute_id','status','quantity','attribute']
+        fields = ['id','order_attribute_id','status','quantity','attribute']
 
 class ProductOrderSerializer(serializers.ModelSerializer):
     product_order_id = serializers.IntegerField(source='id', required=False)

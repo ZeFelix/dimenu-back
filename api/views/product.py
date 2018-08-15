@@ -92,3 +92,20 @@ class ProductDetail(APIView):
         product = Product.objects.get(company_id=company_id, pk=pk)
         product.delete()
         return Response(status = status.HTTP_204_NO_CONTENT)
+
+
+class ProductListCategory(APIView):
+    """
+    Lista todos os produtos daquela categoria
+    """
+
+    permission_classes = (IsAuthenticated, DjangoModelPermissions)
+    authentication_classes = (JWTAuthentication,)
+
+    def get_queryset(self):
+        return Category.objects.all()
+    
+    def get(self, request, company_id, pk):
+        products = Product.objects.filter(company=company_id, category=pk)
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)

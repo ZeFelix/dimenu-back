@@ -91,3 +91,25 @@ class AttributeDetail(APIView):
         attribute = self.get_object(company_id, pk)
         attribute.delete()
         return Response(status = status.HTTP_204_NO_CONTENT)
+
+
+class AttributeListProduct(APIView):
+    """
+    Classe que lista todos os atributos daquele produto
+    """
+
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    authentication_classes = (JWTAuthentication,) 
+
+    def get_queryset(self):
+        return Product.objects.all()
+    
+    def get(self, request, company_id, pk):
+        try:
+            attributes = Product.objects.filter(company=company_id).get(pk=pk).attribute.all()
+            serializers = AttributeSerializer(attributes, many=True)
+            return Response(serializers.data)
+        except ObjectDoesNotExist as a:
+            print(a)
+            return JsonResponse({'detail':'Does not exist!'+str(a)},status=status.HTTP_204_NO_CONTENT)
+        
