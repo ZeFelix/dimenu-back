@@ -23,11 +23,13 @@ class CompanyList(APIView):
     def get_queryset(self):
         return Company.objects.all()
 
-    def get(self, request, format = None):
-        serializer = CompanySerializer(self.get_queryset(), many = True)
+    def get(self, request, pk, format = None):
+        companies = self.get_queryset().filter(owner=pk)
+        serializer = CompanySerializer(companies, many = True)
         return Response(serializer.data)
 
-    def post(self, request, format = None):
+    def post(self, request, pk, format = None):
+        request.data["owner"] = pk
         serializer = CompanySerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
@@ -50,28 +52,28 @@ class CompanyDetail(APIView):
         return Company.objects.all()
 
 
-    def get_object(self, pk):
+    def get_object(self, user_pk, pk):
         try:
-            return Company.objects.get(pk = pk)
+            return Company.objects.get(pk = pk, owner=user_pk)
         except Company.DoesNotExist:
             raise Http404
     
-    def get(self, request, pk, format = None):
-        company = self.get_object(pk)
+    def get(self, request, user_pk, pk, format = None):
+        company = self.get_object(pk=pk,user_pk=user_pk)
         serializer = CompanySerializer(company)
         return Response(serializer.data)    
 
-    def put(self, request, pk, format = None):
-        company = self.get_object(pk)
+    def put(self, request, user_pk, pk, format = None):
+        company = self.get_object(pk=pk,user_pk=user_pk)
         serializer = CompanySerializer(company, data = request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format = None):
+    def delete(self, request, user_pk, pk, format = None):
         try:
-            company = self.get_object(pk)
+            company = self.get_object(pk=pk,user_pk=user_pk)
             company.delete()
             return Response(status = status.HTTP_204_NO_CONTENT)
         except ObjectDoesNotExist as o:
