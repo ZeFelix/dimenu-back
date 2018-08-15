@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from api.models import *
-from api.serializers import ClientSerializer
+from api.serializers import ClientSerializer, CompanySerializer, ProductSerializer, AttributeSerializer, CategorySerializer
 from django.http import Http404, JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -102,3 +102,67 @@ class ClientDetail(APIView):
         except Exception as a: 
             print (a) 
             return JsonResponse({"detail":"An error occurred on the server"},status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+
+"""""""""""""""""""""
+Views para acesso livre do client
+"""""""""""""""""""""
+
+class ClientListCompanies(APIView):
+    """
+    Classe livre de autenticação para o cliente mobile visualizar as empresas
+    """
+
+    def get(self, request, format = None):
+        companies = Company.objects.all()
+        serializer = CompanySerializer(companies, many = True)
+        return Response(serializer.data)
+
+class ClientListCategories(APIView):
+    """
+    Classe livre de autenticação para o cliente mobile visualizar as categorias de determinada empresa
+    """
+
+    def get(self, request, pk):
+        categories = Category.objects.filter(company=pk)
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data)
+
+class ClientListProducts(APIView):
+    """
+    Classe livre de autenticação para o cliente mobile visualizar os produtos de determinada empresa
+    """
+
+    def get(self, request, pk):
+        products = Product.objects.filter(company=pk)
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+
+class ClientListProductsByCategories(APIView):
+    """
+    Classe que lista todos os produtos daquela categoria
+    """
+
+    def get(self, request, pk, category_id):
+        products = Product.objects.filter(category = category_id)
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+
+class ClientListAttributes(APIView):
+    """
+    Classe para visualizar os atributos daquela empresa que sejam adicionais
+    """
+
+    def  get(self, request, pk):
+        attribute = Attribute.objects.filter(company=pk)
+        serializer = AttributeSerializer(attribute, many=True)
+        return Response(serializer.data)
+
+class ClientListAttributesByProducts(APIView):
+    """
+    Classe para visualizar os atributos daquela empresa que sejam adicionais
+    """
+
+    def  get(self, request, pk, product_pk):
+        attribute = Attribute.objects.filter(product=product_pk)
+        serializer = AttributeSerializer(attribute, many=True)
+        return Response(serializer.data)
