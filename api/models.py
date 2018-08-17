@@ -56,6 +56,7 @@ class Employee(User):
 class Table(models.Model):
     identification = models.CharField("Table identification",max_length=45)
     qrcode = models.CharField('Qr code for identification of the table',max_length=50, unique=True)
+    available = models.BooleanField("Table available",default=True)
     company = models.ForeignKey(Company,on_delete=models.CASCADE)
 
     created_at = models.DateTimeField('Created at', auto_now_add=True)

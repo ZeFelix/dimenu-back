@@ -8,6 +8,7 @@ from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
+from django.utils import timezone
 
 
 # Create your views here.
@@ -101,10 +102,17 @@ class CompanyOverView(APIView):
         return Company.objects.all()
 
     def get(self, request, pk):
+        """
+        Busca da empresa:
+            quantidade de produtos;
+            quantidade de funcionários;
+            quantidade de mesas;
+            quantidade de pedidos da data atual.
+        """
         number_products = Product.objects.filter(company=pk).count()
         number_employees = Employee.objects.filter(company=pk).count()
         number_tables = Table.objects.filter(company=pk).count()
-        number_orders_today = Order.objects.filter(company=pk).count()
+        number_orders_today = Order.objects.filter(company=pk,created_at__date=timezone.now().date()).count()
         context = {
             "number_products" : number_products,
             "number_employees" :number_employees,

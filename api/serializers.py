@@ -88,7 +88,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class TableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Table
-        fields = ['id','identification', 'qrcode', 'company']
+        fields = ['id','identification', 'qrcode','available', 'company']
 
 class AvaliationSerializer(serializers.ModelSerializer):
     class Meta:
