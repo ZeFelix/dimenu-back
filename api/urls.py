@@ -1,6 +1,6 @@
 from django.urls import path
 from api.views.permissions import PermissionList, PermissionDetail, GroupList, GroupDetail
-from api.views.company import CompanyList, CompanyDetail
+from api.views.company import CompanyList, CompanyDetail, CompanyOverView
 from api.views.category import CategoryList, CategoryDetail
 from api.views.attribute import AttributeList, AttributeDetail, AttributeListProduct
 from api.views.product import ProductList, ProductDetail, ProductListCategory
@@ -47,6 +47,8 @@ urlpatterns = [
 
     path('companies/<int:company_id>/avaliations', AvaliationList.as_view()),
     path('companies/<int:company_id>/avaliations/<int:pk>', AvaliationDetail.as_view()),
+
+    path('companies/<int:pk>/overview', CompanyOverView.as_view()),
 
     path('token',TokenObtainPairView.as_view()),
     path('token/refresh',TokenRefreshView.as_view()),

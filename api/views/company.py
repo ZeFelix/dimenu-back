@@ -26,7 +26,7 @@ class CompanyList(APIView):
     def get(self, request, pk, format = None):
         try:
             employee = Employee.objects.get(pk)
-            companies = self.get_queryset().get(pk)
+            companies = self.get_queryset().get(employee.company.id)
         except ObjectDoesNotExist as o:
             companies = self.get_queryset().filter(owner=pk)
 
@@ -85,3 +85,30 @@ class CompanyDetail(APIView):
             return JsonResponse({'Detail':'Object not exist!'}, status=status.HTTP_400_BAD_REQUEST)
         
 
+class CompanyOverView(APIView):
+    """
+    Classe para visualizar informações basicas da empresa:
+        quantidade funcionários, quantidade de pedidos do dia, quantidades de mesas, produtos
+    """
+
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    authentication_classes = (JWTAuthentication,)
+
+    def get_queryset(self):
+        """
+        Metodo para verificar as permissões do usuário
+        """
+        return Company.objects.all()
+
+    def get(self, request, pk):
+        number_products = Product.objects.filter(company=pk).count()
+        number_employees = Employee.objects.filter(company=pk).count()
+        number_tables = Table.objects.filter(company=pk).count()
+        number_orders_today = Order.objects.filter(company=pk).count()
+        context = {
+            "number_products" : number_products,
+            "number_employees" :number_employees,
+            "number_tables" : number_tables,
+            "number_orders_today" :number_orders_today
+        }
+        return JsonResponse(context)
