@@ -6,6 +6,10 @@ class Owner(User):
     cpf = models.CharField('CPF',max_length=12, unique=True)
     phone = models.CharField('Phone', max_length=15)
 
+    created_at = models.DateTimeField('Created at', auto_now_add=True)
+    updated_at = models.DateTimeField('Updated at', auto_now=True)
+
+
     class Meta:
         verbose_name = "Owner"
 
@@ -13,6 +17,10 @@ class Client(User):
     cpf = models.CharField('CPF', max_length=12, unique=True)
     phone = models.CharField('Phone', max_length=12, unique=True)
     address = models.CharField("Address", max_length=12,blank=True, null=True)
+
+    created_at = models.DateTimeField('Created at', auto_now_add=True)
+    updated_at = models.DateTimeField('Updated at', auto_now=True)
+
 
     class Meta:
         verbose_name = "Client"
@@ -38,6 +46,9 @@ class Company(models.Model):
 class Employee(User):
     cpf = models.CharField('CPF',max_length=25,unique=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, default=None)
+
+    created_at = models.DateTimeField('Created at', auto_now_add=True)
+    updated_at = models.DateTimeField('Updated at', auto_now=True)
     
     class Meta:
         verbose_name = "Employee"
@@ -145,6 +156,10 @@ class ProductOrder(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
 
+    created_at = models.DateTimeField('Created at', auto_now_add=True)
+    updated_at = models.DateTimeField('Updated at', auto_now=True)
+
+
 class OrderAttribute(models.Model):
     quantity = models.IntegerField(default=1)
     #true: adicionado, false: removido
@@ -152,11 +167,19 @@ class OrderAttribute(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
 
+    created_at = models.DateTimeField('Created at', auto_now_add=True)
+    updated_at = models.DateTimeField('Updated at', auto_now=True)
+
+
 class Avaliation(models.Model):
     note = models.IntegerField()
     client = models.ForeignKey(Client, on_delete=models.CASCADE, default=None)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, default=None)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, default=None)
+
+    created_at = models.DateTimeField('Created at', auto_now_add=True)
+    updated_at = models.DateTimeField('Updated at', auto_now=True)
+
 
     def __str__(self):
         return "Avaliation of the user - " + self.user.username
