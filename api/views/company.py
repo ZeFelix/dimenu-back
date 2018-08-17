@@ -25,8 +25,8 @@ class CompanyList(APIView):
 
     def get(self, request, pk, format = None):
         try:
-            employee = Employee.objects.get(pk)
-            companies = self.get_queryset().get(employee.company.id)
+            employee = Employee.objects.get(pk=pk)
+            companies = self.get_queryset().get(pk=employee.company.id)
         except ObjectDoesNotExist as o:
             companies = self.get_queryset().filter(owner=pk)
 
