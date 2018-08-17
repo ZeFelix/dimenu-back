@@ -24,7 +24,12 @@ class CompanyList(APIView):
         return Company.objects.all()
 
     def get(self, request, pk, format = None):
-        companies = self.get_queryset().filter(owner=pk)
+        try:
+            employee = Employee.objects.get(pk)
+            companies = self.get_queryset().get(pk)
+        except ObjectDoesNotExist as o:
+            companies = self.get_queryset().filter(owner=pk)
+
         serializer = CompanySerializer(companies, many = True)
         return Response(serializer.data)
 
@@ -52,19 +57,19 @@ class CompanyDetail(APIView):
         return Company.objects.all()
 
 
-    def get_object(self, user_pk, pk):
+    def get_object(self, pk):
         try:
-            return Company.objects.get(pk = pk, owner=user_pk)
+            return Company.objects.get(pk = pk)
         except Company.DoesNotExist:
             raise Http404
     
     def get(self, request, user_pk, pk, format = None):
-        company = self.get_object(pk=pk,user_pk=user_pk)
+        company = self.get_object(pk=pk)
         serializer = CompanySerializer(company)
         return Response(serializer.data)    
 
     def put(self, request, user_pk, pk, format = None):
-        company = self.get_object(pk=pk,user_pk=user_pk)
+        company = self.get_object(pk=pk)
         serializer = CompanySerializer(company, data = request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -73,7 +78,7 @@ class CompanyDetail(APIView):
 
     def delete(self, request, user_pk, pk, format = None):
         try:
-            company = self.get_object(pk=pk,user_pk=user_pk)
+            company = self.get_object(pk=pk)
             company.delete()
             return Response(status = status.HTTP_204_NO_CONTENT)
         except ObjectDoesNotExist as o:
