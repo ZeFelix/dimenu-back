@@ -112,11 +112,13 @@ class ProductOrderSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(WritableNestedModelSerializer):
     product = ProductOrderSerializer(source='productorder_set',many=True)
-    attribute = OrderAttributeSerializer(source='orderattribute_set',many=True)
+    attribute = OrderAttributeSerializer(source='orderattribute_set',many=True, required=False)
+    client = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Client.objects.all())
+    employee = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Employee.objects.all())
 
     class Meta:
         model = Order
-        fields = ['id','to_do','doing','done','user','company','table','product','attribute']
+        fields = ['id','to_do','doing','done','client','employee','company','table','product','attribute']
 
 
 class OwnerSerializer(serializers.ModelSerializer): 

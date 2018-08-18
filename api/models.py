@@ -15,7 +15,7 @@ class Owner(User):
 
 class Client(User):
     cpf = models.CharField('CPF', max_length=12, unique=True)
-    phone = models.CharField('Phone', max_length=12, unique=True)
+    phone = models.CharField('Phone', max_length=45, unique=True)
     address = models.CharField("Address", max_length=12,blank=True, null=True)
 
     created_at = models.DateTimeField('Created at', auto_now_add=True, null=True)
@@ -29,7 +29,7 @@ class Company(models.Model):
     fantasy_name = models.CharField('Fantasy name', max_length=45, default="company default")
     cnpj = models.CharField('CNPJ', max_length=45, unique=True)
     email = models.EmailField('Email', max_length=45, unique=True)
-    phone = models.CharField('Phone',max_length=13)
+    phone = models.CharField('Phone',max_length=45)
     qrcode_identification = models.CharField("Qr code for identification",max_length=50, unique=True)
     owner = models.name = models.ForeignKey(Owner, on_delete=models.CASCADE, blank=True, null=True)
 
@@ -140,7 +140,7 @@ class Order(models.Model):
     done = models.BooleanField('Order: done', default=False)
     company = models.ForeignKey(Company,on_delete=models.CASCADE)
     table = models.ForeignKey(Table, on_delete=models.CASCADE, blank=True, null=True)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, default=None, blank=True, null=True)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, blank=True, null=True, default=None)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, blank=True, null=True, default=None)
 
     product = models.ManyToManyField(Product,through='ProductOrder')
