@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Owner(User):
-    cpf = models.CharField('CPF',max_length=12, unique=True)
-    phone = models.CharField('Phone', max_length=15)
+    cpf = models.CharField('CPF',max_length=45, unique=True)
+    phone = models.CharField('Phone', max_length=45)
 
     created_at = models.DateTimeField('Created at', auto_now_add=True, null=True)
     updated_at = models.DateTimeField('Updated at', auto_now=True)
@@ -14,7 +14,7 @@ class Owner(User):
         verbose_name = "Owner"
 
 class Client(User):
-    cpf = models.CharField('CPF', max_length=12, unique=True)
+    cpf = models.CharField('CPF', max_length=45, unique=True)
     phone = models.CharField('Phone', max_length=45, unique=True)
     address = models.CharField("Address", max_length=12,blank=True, null=True)
 
@@ -44,7 +44,7 @@ class Company(models.Model):
         ordering = ["fantasy_name"]
 
 class Employee(User):
-    cpf = models.CharField('CPF',max_length=25,unique=True)
+    cpf = models.CharField('CPF',max_length=45,unique=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, default=None)
 
     created_at = models.DateTimeField('Created at', auto_now_add=True, null=True)
