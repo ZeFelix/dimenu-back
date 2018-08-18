@@ -50,9 +50,6 @@ urlpatterns = [
 
     path('companies/<int:pk>/overview', CompanyOverView.as_view()),
 
-    path('token',TokenObtainPairView.as_view()),
-    path('token/refresh',TokenRefreshView.as_view()),
-
     path('permissions',PermissionList.as_view()),
     path('permissions/<int:pk>',PermissionDetail.as_view()),
     path('permissions/groups',GroupList.as_view()),
@@ -60,6 +57,9 @@ urlpatterns = [
 
     path('owners/register', RegisterOwner.as_view()),
     path('owners/<int:pk>',OwnerDetail.as_view()),
+
+    path('token',TokenObtainPairView.as_view()),
+    path('token/refresh',TokenRefreshView.as_view()),
 
     path('users/<int:pk>/companies', CompanyList.as_view()),
     path('users/<int:user_pk>/companies/<int:pk>', CompanyDetail.as_view())

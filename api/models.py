@@ -140,7 +140,7 @@ class Order(models.Model):
     done = models.BooleanField('Order: done', default=False)
     company = models.ForeignKey(Company,on_delete=models.CASCADE)
     table = models.ForeignKey(Table, on_delete=models.CASCADE, blank=True, null=True)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, default=None)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, default=None, blank=True, null=True)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, blank=True, null=True, default=None)
 
     product = models.ManyToManyField(Product,through='ProductOrder')
