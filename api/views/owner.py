@@ -11,6 +11,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 #encryptografia 
 from django.contrib.auth.hashers import make_password 
 from django.contrib.auth.models import Group 
+from api.custom_permissions import CustomPermissionsOwner
 
 class RegisterOwner(APIView):
     """
@@ -40,7 +41,7 @@ class OwnerDetail(APIView):
     * requerido permissões e autenticação do usuário 
     """ 
      
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,) 
+    permission_classes = (IsAuthenticated, DjangoModelPermissions, CustomPermissionsOwner,) 
     authentication_classes = (JWTAuthentication,) 
  
     def get_queryset(self): 

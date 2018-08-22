@@ -9,6 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from django.utils import timezone
+from api.custom_permissions import CustomPermissions
 
 
 # Create your views here.
@@ -48,7 +49,7 @@ class CompanyDetail(APIView):
     View para acessar atributos via id da empresa
     * requerido permissão de acesso e autenticaçã do usuário
     """
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissions,)
     authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
@@ -64,22 +65,22 @@ class CompanyDetail(APIView):
         except Company.DoesNotExist:
             raise Http404
     
-    def get(self, request, user_pk, pk, format = None):
-        company = self.get_object(pk=pk)
+    def get(self, request, user_pk, company_id, format = None):
+        company = self.get_object(pk=company_id)
         serializer = CompanySerializer(company)
         return Response(serializer.data)    
 
-    def put(self, request, user_pk, pk, format = None):
-        company = self.get_object(pk=pk)
+    def put(self, request, user_pk, company_id, format = None):
+        company = self.get_object(pk=company_id)
         serializer = CompanySerializer(company, data = request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, user_pk, pk, format = None):
+    def delete(self, request, user_pk, company_id, format = None):
         try:
-            company = self.get_object(pk=pk)
+            company = self.get_object(pk=company_id)
             company.delete()
             return Response(status = status.HTTP_204_NO_CONTENT)
         except ObjectDoesNotExist as o:
@@ -92,7 +93,7 @@ class CompanyOverView(APIView):
         quantidade funcionários, quantidade de pedidos do dia, quantidades de mesas, produtos
     """
 
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissions,)
     authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
@@ -101,7 +102,7 @@ class CompanyOverView(APIView):
         """
         return Company.objects.all()
 
-    def get(self, request, pk):
+    def get(self, request, company_id):
         """
         Busca da empresa:
             quantidade de produtos;
@@ -109,10 +110,10 @@ class CompanyOverView(APIView):
             quantidade de mesas;
             quantidade de pedidos da data atual.
         """
-        number_products = Product.objects.filter(company=pk).count()
-        number_employees = Employee.objects.filter(company=pk).count()
-        number_tables = Table.objects.filter(company=pk).count()
-        number_orders_today = Order.objects.filter(company=pk,created_at__date=timezone.now().date()).count()
+        number_products = Product.objects.filter(company=company_id).count()
+        number_employees = Employee.objects.filter(company=company_id).count()
+        number_tables = Table.objects.filter(company=company_id).count()
+        number_orders_today = Order.objects.filter(company=company_id,created_at__date=timezone.now().date()).count()
         context = {
             "number_products" : number_products,
             "number_employees" :number_employees,

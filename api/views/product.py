@@ -8,6 +8,7 @@ from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from api.custom_permissions import CustomPermissions
 
 class ProductList(APIView):
     """
@@ -15,7 +16,7 @@ class ProductList(APIView):
     * requerido permissões e autenticação do usuário
     """
 
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissions,)
     authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
@@ -53,7 +54,7 @@ class ProductDetail(APIView):
     Atualiza, deleta um produto
     * requerido permissões e autenticação do usuário
     """
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissions,)
     authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
@@ -99,7 +100,7 @@ class ProductListCategory(APIView):
     Lista todos os produtos daquela categoria
     """
 
-    permission_classes = (IsAuthenticated, DjangoModelPermissions)
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissions,)
     authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):

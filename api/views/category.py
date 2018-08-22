@@ -8,6 +8,7 @@ from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from api.custom_permissions import CustomPermissions
 
 class CategoryList(APIView):
     """
@@ -15,7 +16,7 @@ class CategoryList(APIView):
     * requerido permissão de acesso e autenticaçã do usuário
     """
     
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissions,)
     authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
@@ -50,7 +51,7 @@ class CategoryDetail(APIView):
     * requerido permissão de acesso e autenticaçã do usuário
     """
     
-    permission_classes = (IsAuthenticated, DjangoModelPermissions)
+    permission_classes = (IsAuthenticated, DjangoModelPermissions, CustomPermissions,)
     authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):

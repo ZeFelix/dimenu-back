@@ -13,6 +13,7 @@ from api.views.client import (
     ClientListCategories, ClientListProductsByCategories, ClientListAttributes,
     ClientListAttributesByProducts
 )
+from api.views.employee import EmployeeDetail, EmployeeList
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -34,6 +35,9 @@ urlpatterns = [
     path('companies/<int:company_id>/attributes', AttributeList.as_view()),
     path('companies/<int:company_id>/attributes/<int:pk>', AttributeDetail.as_view()),
 
+    path('companies/<int:company_id>/employees', EmployeeList.as_view()),
+    path('companies/<int:company_id>/employees/<int:pk>', EmployeeDetail.as_view()),
+
     path('companies/<int:company_id>/products',ProductList.as_view()),
     path('companies/<int:company_id>/products/<int:pk>',ProductDetail.as_view()),
     path('companies/<int:company_id>/products/<int:pk>/attributes',AttributeListProduct.as_view()),
@@ -48,7 +52,7 @@ urlpatterns = [
     path('companies/<int:company_id>/avaliations', AvaliationList.as_view()),
     path('companies/<int:company_id>/avaliations/<int:pk>', AvaliationDetail.as_view()),
 
-    path('companies/<int:pk>/overview', CompanyOverView.as_view()),
+    path('companies/<int:company_id>/overview', CompanyOverView.as_view()),
 
     path('permissions',PermissionList.as_view()),
     path('permissions/<int:pk>',PermissionDetail.as_view()),
@@ -62,6 +66,6 @@ urlpatterns = [
     path('token/refresh',TokenRefreshView.as_view()),
 
     path('users/<int:pk>/companies', CompanyList.as_view()),
-    path('users/<int:user_pk>/companies/<int:pk>', CompanyDetail.as_view())
+    path('users/<int:user_pk>/companies/<int:company_id>', CompanyDetail.as_view())
 
 ]

@@ -8,6 +8,8 @@ from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
+import jwt
+from api.custom_permissions import CustomPermissionsOrder, CustomPermissions, CustomPermissionsOrderTable
 
 class OrderList(APIView):
     """
@@ -15,7 +17,7 @@ class OrderList(APIView):
     * requerido autenticação e permissão do usuário
     """
     
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissionsOrder,)
     authentication_classes = (JWTAuthentication,)
     
     def get_queryset(self):
@@ -25,7 +27,24 @@ class OrderList(APIView):
         return Order.objects.all()
     
     def get(self, request, company_id):
-        orders = Order.objects.filter(company_id=company_id)
+        """
+        Verifica o token se é um client que ta fazendo a requisições de todas as ordes dele
+        caso seja, filtra usando o company_id e o client
+        """
+        token = request.META["HTTP_AUTHORIZATION"].replace("Bearer ","")
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY)
+            user = User.objects.get(pk=payload["user_id"])
+            client = user.client
+            orders = Order.objects.filter(company_id=company_id,client=client)
+        except ObjectDoesNotExist:
+            orders = Order.objects.filter(company_id=company_id)
+        except jwt.ExpiredSignatureError:
+            return 'Signature expired. Please log in again.'
+        except jwt.InvalidTokenError:
+            return 'Invalid token. Please log in again.' 
+
+    
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data)
     
@@ -42,7 +61,7 @@ class OrderDetail(APIView):
     * requerido permissões e autenticação do usuário
     """
     
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissionsOrder,)
     authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
@@ -55,7 +74,7 @@ class OrderDetail(APIView):
         try:
             if pk == '0' or company_id == '0':
                 return JsonResponse({'detail':'ID must be greater than zero.'}, status=status.HTTP_400_BAD_REQUEST)
-            order = Order.objects.get(pk=pk)
+            order = Order.objects.get(company_id=company_id,pk=pk)
             serializer = OrderSerializer(order)
             return Response(serializer.data)
         except ObjectDoesNotExist as a:
@@ -86,6 +105,8 @@ class OrderListTable(APIView):
     """
     Classe que lista todas as compras daquela mesa
     """
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissionsOrderTable,)
+    authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
         return Order.objects.all()

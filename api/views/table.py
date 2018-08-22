@@ -9,6 +9,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from api.custom_permissions import CustomPermissions
+
 
 class TableList(APIView):
     """
@@ -16,7 +18,7 @@ class TableList(APIView):
     * requerido permissões e autenticação do usuário
     """
 
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    permission_classes = (IsAuthenticated, DjangoModelPermissions, CustomPermissions,)
     authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
@@ -50,7 +52,7 @@ class TableDetail(APIView):
     Atualiza, deleta e detalha um mesa
     """
 
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissions,)
     authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):

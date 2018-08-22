@@ -9,13 +9,14 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from api.custom_permissions import CustomPermissions
 
 class AttributeList(APIView):
     """
     Lista,cria todos os atributos dos produtos
     * requerido permissão de acesso e autenticaçã do usuário
     """
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissions,)
     authentication_classes = (JWTAuthentication,)
 
 
@@ -48,7 +49,7 @@ class AttributeDetail(APIView):
     Atualiza, deleta e busca apenas um atributo
     * requerido permissão de acesso e autenticaçã do usuário
     """ 
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissions,)
     authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
@@ -98,7 +99,7 @@ class AttributeListProduct(APIView):
     Classe que lista todos os atributos daquele produto
     """
 
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,)
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissions,)
     authentication_classes = (JWTAuthentication,) 
 
     def get_queryset(self):

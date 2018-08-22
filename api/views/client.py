@@ -11,6 +11,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 #encryptografia 
 from django.contrib.auth.hashers import make_password 
 from django.contrib.auth.models import Group 
+from api.custom_permissions import CustomPermissionsClient
 
 
 class RegisterClient(APIView):
@@ -32,7 +33,7 @@ class RegisterClient(APIView):
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST) 
         except Exception as a: 
             print (a) 
-            return JsonResponse({"detail":"An error occurred on the server"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JsonResponse({"detail":"An error occurred on the server: "+str(a)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class ClientDetail(APIView): 
@@ -41,7 +42,7 @@ class ClientDetail(APIView):
     * requerido permissões e autenticação do usuário 
     """ 
      
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,) 
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissionsClient,) 
     authentication_classes = (JWTAuthentication,) 
  
     def get_queryset(self): 
