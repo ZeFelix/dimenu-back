@@ -58,13 +58,14 @@ class PermissionSerializer(serializers.ModelSerializer):
         fields = ['id','name','codename']
 
 class CompanySerializer(serializers.ModelSerializer):
-    
+    image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)    
     class Meta:
         model = Company
         fields = ('id', 'fantasy_name', 'cnpj', 'email', 'phone', 'qrcode_identification','image','owner')
     
 
 class CategorySerializer(serializers.ModelSerializer):
+    image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)
     class Meta:
         model = Category
         fields = ['id','name', 'color','image','company']
