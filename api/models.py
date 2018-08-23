@@ -26,11 +26,16 @@ class Client(User):
         verbose_name = "Client"
 
 class Company(models.Model):
+    def company_directory_path(instance, filename):
+        # file will be uploaded to MEDIA_ROOT/product/id/<filename>
+        return 'company/{0}/{1}'.format(instance.id, filename)  
+
     fantasy_name = models.CharField('Fantasy name', max_length=45, default="company default")
     cnpj = models.CharField('CNPJ', max_length=45, unique=True)
     email = models.EmailField('Email', max_length=45, unique=True)
     phone = models.CharField('Phone',max_length=45)
     qrcode_identification = models.CharField("Qr code for identification",max_length=50, unique=True)
+    image = models.ImageField("Log of Company", upload_to=company_directory_path, blank=True, null=True)
     owner = models.name = models.ForeignKey(Owner, on_delete=models.CASCADE, blank=True, null=True)
 
     created_at = models.DateTimeField('Created at', auto_now_add=True)
@@ -93,7 +98,13 @@ class Attribute(models.Model):
 
 
 class Category(models.Model):
+
+    def category_directory_path(instance, filename):
+        # file will be uploaded to MEDIA_ROOT/product/id/<filename>
+        return 'category/{0}/{1}'.format(instance.id, filename)  
     name = models.CharField('Name',max_length=45)
+    color = models.CharField(max_length=45, blank=True, null=True)
+    image = models.ImageField("Image of the Category", upload_to=category_directory_path, blank=True, null=True)
     company = models.ForeignKey(Company,on_delete=models.CASCADE)
 
     created_at = models.DateTimeField('Created at', auto_now_add=True)

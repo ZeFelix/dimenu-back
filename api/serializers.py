@@ -61,13 +61,13 @@ class CompanySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Company
-        fields = ('id', 'fantasy_name', 'cnpj', 'email', 'phone', 'qrcode_identification','owner')
+        fields = ('id', 'fantasy_name', 'cnpj', 'email', 'phone', 'qrcode_identification','image','owner')
     
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id','name', 'company']
+        fields = ['id','name', 'color','image','company']
 
 
 class AttributeSerializer(serializers.ModelSerializer):
