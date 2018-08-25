@@ -119,6 +119,30 @@ class Category(models.Model):
         unique_together = ("company","name")
         ordering = ["name"]
 
+class Ingredient(models.Model):
+    
+    def ingredient_directory_path(instance, filename):
+            # file will be uploaded to MEDIA_ROOT/product/id/<filename>
+        return 'ingredient/{0}/{1}'.format(instance.id, filename)   
+
+    name = models.CharField("Ingredient Name", max_length=50)
+    is_additonal = models.BooleanField("Can is additional?", default=True)
+    status = models.BooleanField("Status: available?", default=True)
+    image = models.ImageField("Image", upload_to=ingredient_directory_path, blank=True, null=True)
+    
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField('Created at', auto_now_add=True, null=True)
+    updated_at = models.DateTimeField('Updated at', auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        unique_together = ("company","name")
+        ordering = ["name"]
+
+    
 class Product(models.Model):
     
     def product_directory_path(instance, filename):
@@ -134,6 +158,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category,on_delete=models.CASCADE)
 
     attribute = models.ManyToManyField(Attribute)
+    ingredient =models.ManyToManyField(Ingredient, through='ProductIngredient')
 
     created_at = models.DateTimeField('Created at', auto_now_add=True)
     updated_at = models.DateTimeField('Updated at', auto_now=True)
@@ -144,7 +169,6 @@ class Product(models.Model):
     class Meta:
         unique_together = ("company","name")
         ordering = ["name"]
-    
 
 class Order(models.Model):
     to_do = models.BooleanField('Order: to do', default=True)
@@ -156,7 +180,8 @@ class Order(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, blank=True, null=True, default=None)
 
     product = models.ManyToManyField(Product,through='ProductOrder')
-    attribute = models.ManyToManyField(Attribute,through='OrderAttribute')
+    attribute = models.ManyToManyField(Attribute)
+    ingredient = models.ManyToManyField(Ingredient, through='IngredientOrder')
 
     created_at = models.DateTimeField('Created at', auto_now_add=True)
     updated_at = models.DateTimeField('Updated at', auto_now=True)
@@ -172,13 +197,21 @@ class ProductOrder(models.Model):
     created_at = models.DateTimeField('Created at', auto_now_add=True,null=True)
     updated_at = models.DateTimeField('Updated at', auto_now=True)
 
+class ProductIngredient(models.Model):
+    grams = models.FloatField("Quantity grams of the produtc.", default=0.0)
+    prodcut = models.ForeignKey(Product, on_delete=models.CASCADE)
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
 
-class OrderAttribute(models.Model):
+    created_at = models.DateTimeField('Created at', auto_now_add=True, null=True)
+    updated_at = models.DateTimeField('Updated at', auto_now=True)
+
+
+class IngredientOrder(models.Model):
     quantity = models.IntegerField(default=1)
     #true: adicionado, false: removido
-    status = models.BooleanField('Indicates whether the attribute was removed and added to this order',default=True)
+    is_selected = models.BooleanField('Indicates whether the ingredient was removed and added to this order',default=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField('Created at', auto_now_add=True, null=True)
     updated_at = models.DateTimeField('Updated at', auto_now=True)

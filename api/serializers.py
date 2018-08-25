@@ -100,13 +100,6 @@ class AvaliationSerializer(serializers.ModelSerializer):
         fields = ['id','note', 'client', 'product', 'company']
 
 
-class OrderAttributeSerializer(serializers.ModelSerializer):
-    order_attribute_id = serializers.IntegerField(source='id', required=False)
-
-    class Meta:
-        model = OrderAttribute
-        fields = ['id','order_attribute_id','status','quantity','attribute']
-
 class ProductOrderSerializer(serializers.ModelSerializer):
     product_order_id = serializers.IntegerField(source='id', required=False)
 
@@ -116,7 +109,7 @@ class ProductOrderSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(WritableNestedModelSerializer):
     product = ProductOrderSerializer(source='productorder_set',many=True)
-    attribute = OrderAttributeSerializer(source='orderattribute_set',many=True, required=False)
+    attribute = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Attribute.objects.all())
     client = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Client.objects.all())
     employee = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Employee.objects.all())
 
