@@ -138,11 +138,16 @@ class ClientSerializer(serializers.ModelSerializer):
     groups = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Group.objects.all()) 
     
     password = serializers.CharField(write_only = True) 
-    email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])
-
+    email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())], required=False)
+    
     class Meta:
         model = Client
         fields = ['id','password','username','first_name',"last_name",'email','cpf','phone','address','is_staff','user_permissions','groups']  
+        extra_kwargs = {
+            "cpf": {"required":False},
+            "address": {"required":False},
+            "last_name": {"required":False}
+        }
 
 
 class EmployeeSerializer(serializers.ModelSerializer):

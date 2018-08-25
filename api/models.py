@@ -14,7 +14,7 @@ class Owner(User):
         verbose_name = "Owner"
 
 class Client(User):
-    cpf = models.CharField('CPF', max_length=45, unique=True)
+    cpf = models.CharField('CPF', max_length=45, unique=True, blank=True, null=True)
     phone = models.CharField('Phone', max_length=45, unique=True)
     address = models.CharField("Address", max_length=12,blank=True, null=True)
 
