@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
 import jwt
 from api.custom_permissions import CustomPermissionsOrder, CustomPermissions, CustomPermissionsOrderTable
+from cardapio import settings
 
 class OrderList(APIView):
     """
@@ -40,9 +41,9 @@ class OrderList(APIView):
         except ObjectDoesNotExist:
             orders = Order.objects.filter(company_id=company_id)
         except jwt.ExpiredSignatureError:
-            return 'Signature expired. Please log in again.'
+            return JsonResponse({"details":'Signature expired. Please log in again.'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.InvalidTokenError:
-            return 'Invalid token. Please log in again.' 
+            return JsonResponse({"details":'Invalid token. Please log in again.'}, status=status.HTTP_400_BAD_REQUEST) 
 
     
         serializer = OrderSerializer(orders, many=True)

@@ -66,6 +66,14 @@ class CompanySerializer(serializers.ModelSerializer):
             "color" : {"required":False}
         }
 
+class ProductIngredientSerializer(serializers.ModelSerializer):
+    product_ingredient_id = serializers.IntegerField(source='id', required=False)
+
+    class Meta:
+        model = ProductIngredient
+        fields = ['product_ingredient_id','grams','ingredient']
+
+
 class IngredientSerializer(serializers.ModelSerializer):
     image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)
     class Meta:
@@ -90,13 +98,17 @@ class AttributeSerializer(serializers.ModelSerializer):
         model = Attribute
         fields = ['id','name','status','is_additional','image','company']
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductSerializer(WritableNestedModelSerializer):
     image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)
     attribute = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Attribute.objects.all())
+    ingredient = ProductIngredientSerializer(source='productingredient_set',many=True)
 
     class Meta:
         model = Product
-        fields = ["id","name", "description", "price", "status", "image", "company", "category","attribute"]
+        fields = ["id","name", "description", "price", "status", "image", "company", "category","attribute","ingredient"]
+        extra_fields = {
+            "ingredient":{"required":False}
+        }
 
 class TableSerializer(serializers.ModelSerializer):
     class Meta:

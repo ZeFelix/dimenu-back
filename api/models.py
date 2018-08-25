@@ -139,7 +139,7 @@ class Ingredient(models.Model):
         return self.name
 
     class Meta:
-        unique_together = ("company","name")
+        unique_together = (("company","name"),)
         ordering = ["name"]
 
     
@@ -199,7 +199,7 @@ class ProductOrder(models.Model):
 
 class ProductIngredient(models.Model):
     grams = models.FloatField("Quantity grams of the produtc.", default=0.0)
-    prodcut = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField('Created at', auto_now_add=True, null=True)
