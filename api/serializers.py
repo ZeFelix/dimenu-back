@@ -61,7 +61,10 @@ class CompanySerializer(serializers.ModelSerializer):
     image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)    
     class Meta:
         model = Company
-        fields = ('id', 'fantasy_name', 'cnpj', 'email', 'phone', 'qrcode_identification','image','owner')
+        fields = ('id', 'fantasy_name', 'cnpj', 'email', 'phone', 'qrcode_identification','color','image','owner')
+        extra_fields = {
+            "color" : {"required":False}
+        }
     
 
 class CategorySerializer(serializers.ModelSerializer):

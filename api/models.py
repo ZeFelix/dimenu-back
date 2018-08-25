@@ -37,6 +37,7 @@ class Company(models.Model):
     qrcode_identification = models.CharField("Qr code for identification",max_length=50, unique=True)
     image = models.ImageField("Log of Company", upload_to=company_directory_path, blank=True, null=True)
     owner = models.name = models.ForeignKey(Owner, on_delete=models.CASCADE, blank=True, null=True)
+    color = models.CharField("Color of the company", max_length=50, blank=True, null=True, default="#ffffff")
 
     created_at = models.DateTimeField('Created at', auto_now_add=True)
     updated_at = models.DateTimeField('Updated at', auto_now=True)
