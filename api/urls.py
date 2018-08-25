@@ -14,6 +14,7 @@ from api.views.client import (
     ClientListAttributesByProducts
 )
 from api.views.employee import EmployeeDetail, EmployeeList
+from api.views.user import UserDetail
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -65,6 +66,7 @@ urlpatterns = [
     path('token',TokenObtainPairView.as_view()),
     path('token/refresh',TokenRefreshView.as_view()),
 
+    path('users/<int:pk>', UserDetail.as_view()),
     path('users/<int:pk>/companies', CompanyList.as_view()),
     path('users/<int:user_pk>/companies/<int:company_id>', CompanyDetail.as_view())
 
