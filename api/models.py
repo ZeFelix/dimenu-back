@@ -209,7 +209,7 @@ class ProductIngredient(models.Model):
 class IngredientOrder(models.Model):
     quantity = models.IntegerField(default=1)
     #true: adicionado, false: removido
-    is_selected = models.BooleanField('Indicates whether the ingredient was removed and added to this order',default=True)
+    is_selected = models.BooleanField('Is selected?',default=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
 
