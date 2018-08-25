@@ -1,0 +1,37 @@
+      movieId                                              title        ...         Film-Noir (no genres listed)
+537       610                                        Heavy Metal        ...               0.0                0.0
+957      1200                                             Aliens        ...               0.0                0.0
+4003     5219                                      Resident Evil        ...               0.0                0.0
+6214    36509                                          Cave, The        ...               0.0                0.0
+6228    37380                                               Doom        ...               0.0                0.0
+6280    40226                                          Wild Zero        ...               0.0                0.0
+6997    60471                                              Rogue        ...               0.0                0.0
+7121    64900  Chinese Ghost Story II, A (Sien nui yau wan II...        ...               0.0                0.0
+7569    78967                          Island of Dr. Moreau, The        ...               0.0                0.0
+9116   161918                       Sharknado 4: The 4th Awakens        ...               0.0                0.0
+
+[10 rows x 24 columns]      movieId                                              title        ...         Film-Noir (no genres listed)
+537       610                                        Heavy Metal        ...               0.0                0.0
+957      1200                                             Aliens        ...               0.0                0.0
+4003     5219                                      Resident Evil        ...               0.0                0.0
+6214    36509                                          Cave, The        ...               0.0                0.0
+6228    37380                                               Doom        ...               0.0                0.0
+6280    40226                                          Wild Zero        ...               0.0                0.0
+6997    60471                                              Rogue        ...               0.0                0.0
+7121    64900  Chinese Ghost Story II, A (Sien nui yau wan II...        ...               0.0                0.0
+7569    78967                          Island of Dr. Moreau, The        ...               0.0                0.0
+9116   161918                       Sharknado 4: The 4th Awakens        ...               0.0                0.0
+
+[10 rows x 24 columns]      movieId                                              title        ...         Film-Noir (no genres listed)
+537       610                                        Heavy Metal        ...               0.0                0.0
+957      1200                                             Aliens        ...               0.0                0.0
+4003     5219                                      Resident Evil        ...               0.0                0.0
+6214    36509                                          Cave, The        ...               0.0                0.0
+6228    37380                                               Doom        ...               0.0                0.0
+6280    40226                                          Wild Zero        ...               0.0                0.0
+6997    60471                                              Rogue        ...               0.0                0.0
+7121    64900  Chinese Ghost Story II, A (Sien nui yau wan II...        ...               0.0                0.0
+7569    78967                          Island of Dr. Moreau, The        ...               0.0                0.0
+9116   161918                       Sharknado 4: The 4th Awakens        ...               0.0                0.0
+
+[10 rows x 24 columns]
