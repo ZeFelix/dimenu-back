@@ -126,7 +126,7 @@ class Ingredient(models.Model):
         return 'ingredient/{0}/{1}'.format(instance.id, filename)   
 
     name = models.CharField("Ingredient Name", max_length=50)
-    is_additonal = models.BooleanField("Can is additional?", default=True)
+    is_additional = models.BooleanField("Can is additional?", default=True)
     status = models.BooleanField("Status: available?", default=True)
     image = models.ImageField("Image", upload_to=ingredient_directory_path, blank=True, null=True)
     

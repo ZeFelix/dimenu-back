@@ -15,6 +15,7 @@ from api.views.client import (
 )
 from api.views.employee import EmployeeDetail, EmployeeList
 from api.views.user import UserDetail
+from api.views.ingredient import IngredientList, IngredientDetail
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -42,6 +43,9 @@ urlpatterns = [
     path('companies/<int:company_id>/products',ProductList.as_view()),
     path('companies/<int:company_id>/products/<int:pk>',ProductDetail.as_view()),
     path('companies/<int:company_id>/products/<int:pk>/attributes',AttributeListProduct.as_view()),
+
+    path('companies/<int:company_id>/ingredients',IngredientList.as_view()),
+    path('companies/<int:company_id>/ingredients/<int:pk>',IngredientDetail.as_view()),
 
     path('companies/<int:company_id>/tables', TableList.as_view()),
     path('companies/<int:company_id>/tables/<int:pk>', TableDetail.as_view()),

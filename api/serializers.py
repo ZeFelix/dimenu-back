@@ -65,7 +65,16 @@ class CompanySerializer(serializers.ModelSerializer):
         extra_fields = {
             "color" : {"required":False}
         }
-    
+
+class IngredientSerializer(serializers.ModelSerializer):
+    image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)
+    class Meta:
+        model = Ingredient
+        fields = ('id','name','is_additional',"status","image","company")
+        extra_fields = {
+            "image":{"required":False}
+        }
+        
 
 class CategorySerializer(serializers.ModelSerializer):
     image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)
