@@ -182,10 +182,10 @@ class CustomPermissionsOrderTable(permissions.BasePermission):
         try:
             payload = jwt.decode(token, settings.SECRET_KEY)
         except jwt.ExpiredSignatureError:
-            msg 'Signature expired. Please log in again.'
+            msg = 'Signature expired. Please log in again.'
             raise exceptions.AuthenticationFailed(msg)
         except jwt.InvalidTokenError:
-            msg 'Invalid token. Please log in again.' 
+            msg = 'Invalid token. Please log in again.' 
             raise exceptions.AuthenticationFailed(msg)
 
         try:
