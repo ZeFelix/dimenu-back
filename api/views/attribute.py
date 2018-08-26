@@ -16,8 +16,8 @@ class AttributeList(APIView):
     Lista,cria todos os atributos dos produtos
     * requerido permissão de acesso e autenticaçã do usuário
     """
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissions,)
-    authentication_classes = (JWTAuthentication,)
+    #permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissions,)
+    #authentication_classes = (JWTAuthentication,)
 
 
     def get_queryset(self):
@@ -49,8 +49,8 @@ class AttributeDetail(APIView):
     Atualiza, deleta e busca apenas um atributo
     * requerido permissão de acesso e autenticaçã do usuário
     """ 
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissions,)
-    authentication_classes = (JWTAuthentication,)
+    #permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissions,)
+    #authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
         """

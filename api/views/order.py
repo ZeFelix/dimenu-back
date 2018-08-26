@@ -18,8 +18,8 @@ class OrderList(APIView):
     * requerido autenticação e permissão do usuário
     """
     
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissionsOrder,)
-    authentication_classes = (JWTAuthentication,)
+    #permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissionsOrder,)
+    #authentication_classes = (JWTAuthentication,)
     
     def get_queryset(self):
         """
@@ -62,8 +62,8 @@ class OrderDetail(APIView):
     * requerido permissões e autenticação do usuário
     """
     
-    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissionsOrder,)
-    authentication_classes = (JWTAuthentication,)
+    #permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissionsOrder,)
+    #authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
         """
@@ -85,13 +85,15 @@ class OrderDetail(APIView):
     
     def put(self, request, company_id, pk):
         try:
+            request.data["company"] = company_id
             order = Order.objects.get(company_id=company_id, pk=pk)
             serializer = OrderSerializer(order,data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
-        except expression as identifier:     
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except ObjectDoesNotExist as a:     
+            return JsonResponse({"detail":"An error occurred on the server"+str(a)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def delete(self, request, company_id, pk):
         try:

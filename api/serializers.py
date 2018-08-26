@@ -74,6 +74,14 @@ class ProductIngredientSerializer(serializers.ModelSerializer):
         fields = ['product_ingredient_id','grams','ingredient']
 
 
+class IngredientOrderSerializer(serializers.ModelSerializer):
+    ingredient_order_id = serializers.IntegerField(source='id', required=False)
+
+    class Meta:
+        model = IngredientOrder
+        fields = ['ingredient_order_id','quantity','is_selected','ingredient']
+
+
 class IngredientSerializer(serializers.ModelSerializer):
     image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)
     class Meta:
@@ -133,10 +141,11 @@ class OrderSerializer(WritableNestedModelSerializer):
     attribute = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Attribute.objects.all())
     client = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Client.objects.all())
     employee = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Employee.objects.all())
+    ingredient = IngredientOrderSerializer(source='ingredientorder_set', many=True)
 
     class Meta:
         model = Order
-        fields = ['id','to_do','doing','done','client','employee','company','table','product','attribute']
+        fields = ['id','to_do','doing','done','client','employee','company','table','product','attribute','ingredient']
 
 
 class OwnerSerializer(serializers.ModelSerializer): 
