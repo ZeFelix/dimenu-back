@@ -14,6 +14,8 @@ class IngredientList(APIView):
     """
     Classe para lista todos os ingredientes e criar novos
     """
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissions,)
+    authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
         """
@@ -44,6 +46,8 @@ class IngredientDetail(APIView):
     """
     Classe para listar detalhes de um ingredient, deletar e atualizar
     """
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissions,)
+    authentication_classes = (JWTAuthentication,)
     
     def get_queryset(self):
         """

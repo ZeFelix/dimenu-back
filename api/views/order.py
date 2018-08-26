@@ -18,8 +18,8 @@ class OrderList(APIView):
     * requerido autenticação e permissão do usuário
     """
     
-    #permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissionsOrder,)
-    #authentication_classes = (JWTAuthentication,)
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissionsOrder,)
+    authentication_classes = (JWTAuthentication,)
     
     def get_queryset(self):
         """
@@ -62,8 +62,8 @@ class OrderDetail(APIView):
     * requerido permissões e autenticação do usuário
     """
     
-    #permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissionsOrder,)
-    #authentication_classes = (JWTAuthentication,)
+    permission_classes = (IsAuthenticated, DjangoModelPermissions,CustomPermissionsOrder,)
+    authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
         """

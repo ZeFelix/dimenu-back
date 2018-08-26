@@ -22,9 +22,11 @@ class CustomPermissions(permissions.BasePermission):
         try:
             payload = jwt.decode(token, settings.SECRET_KEY)
         except jwt.ExpiredSignatureError:
-            return 'Signature expired. Please log in again.'
+            msg = 'Signature expired. Please log in again.'
+            raise exceptions.AuthenticationFailed(msg)
         except jwt.InvalidTokenError:
-            return 'Invalid token. Please log in again.' 
+            msg = 'Invalid token. Please log in again.' 
+            raise exceptions.AuthenticationFailed(msg)
 
         try:
             user = User.objects.get(pk=payload['user_id'])
@@ -54,7 +56,7 @@ class CustomPermissions(permissions.BasePermission):
 
 class CustomPermissionsEmployee(permissions.BasePermission):
     """
-    Classe customizada para identificar se o usuário é criador ou pertence a empresa
+    Classe customizada para identificar se o usuário é o dono dos seus dados
     """
 
     def has_permission(self, request, view):
@@ -68,9 +70,11 @@ class CustomPermissionsEmployee(permissions.BasePermission):
         try:
             payload = jwt.decode(token, settings.SECRET_KEY)
         except jwt.ExpiredSignatureError:
-            return 'Signature expired. Please log in again.'
+            msg = 'Signature expired. Please log in again.'
+            raise exceptions.AuthenticationFailed(msg)
         except jwt.InvalidTokenError:
-            return 'Invalid token. Please log in again.' 
+            msg = 'Invalid token. Please log in again.' 
+            raise exceptions.AuthenticationFailed(msg)
 
         try:
             user = User.objects.get(pk=payload['user_id'])
@@ -104,7 +108,7 @@ class CustomPermissionsOrder(permissions.BasePermission):
     Classe customizada para identificar se o usuário é criador ou pertence a empresa dona das orders
     Caso seja um client:
         o get de todas as ordes não será permitido;
-        o put, get de uma order e delete só será permitido caso tenha sejá o criador da order
+        o put, get de uma order e delete só será permitido caso sejá o criador da order
     """
 
     def has_permission(self, request, view):
@@ -118,9 +122,11 @@ class CustomPermissionsOrder(permissions.BasePermission):
         try:
             payload = jwt.decode(token, settings.SECRET_KEY)
         except jwt.ExpiredSignatureError:
-            return 'Signature expired. Please log in again.'
+            msg =  'Signature expired. Please log in again.'
+            raise exceptions.AuthenticationFailed(msg)
         except jwt.InvalidTokenError:
-            return 'Invalid token. Please log in again.' 
+            msg = 'Invalid token. Please log in again.' 
+            raise exceptions.AuthenticationFailed(msg)
 
         try:
             user = User.objects.get(pk=payload['user_id'])
@@ -176,9 +182,11 @@ class CustomPermissionsOrderTable(permissions.BasePermission):
         try:
             payload = jwt.decode(token, settings.SECRET_KEY)
         except jwt.ExpiredSignatureError:
-            return 'Signature expired. Please log in again.'
+            msg 'Signature expired. Please log in again.'
+            raise exceptions.AuthenticationFailed(msg)
         except jwt.InvalidTokenError:
-            return 'Invalid token. Please log in again.' 
+            msg 'Invalid token. Please log in again.' 
+            raise exceptions.AuthenticationFailed(msg)
 
         try:
             user = User.objects.get(pk=payload['user_id'])
@@ -223,9 +231,11 @@ class CustomPermissionsClient(permissions.BasePermission):
         try:
             payload = jwt.decode(token, settings.SECRET_KEY)
         except jwt.ExpiredSignatureError:
-            return 'Signature expired. Please log in again.'
+            msg = 'Signature expired. Please log in again.'
+            raise exceptions.AuthenticationFailed(msg)
         except jwt.InvalidTokenError:
-            return 'Invalid token. Please log in again.' 
+            msg = 'Invalid token. Please log in again.' 
+            raise exceptions.AuthenticationFailed(msg)
 
         try:
             user = User.objects.get(pk=payload['user_id'])
@@ -263,9 +273,11 @@ class CustomPermissionsOwner(permissions.BasePermission):
         try:
             payload = jwt.decode(token, settings.SECRET_KEY)
         except jwt.ExpiredSignatureError:
-            return 'Signature expired. Please log in again.'
+            msg = 'Signature expired. Please log in again.'
+            raise exceptions.AuthenticationFailed(msg)
         except jwt.InvalidTokenError:
-            return 'Invalid token. Please log in again.' 
+            msg = 'Invalid token. Please log in again.' 
+            raise exceptions.AuthenticationFailed(msg)
 
         try:
             user = User.objects.get(pk=payload['user_id'])
