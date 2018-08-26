@@ -58,16 +58,45 @@ class PermissionSerializer(serializers.ModelSerializer):
         fields = ['id','name','codename']
 
 class CompanySerializer(serializers.ModelSerializer):
-    
+    image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)    
     class Meta:
         model = Company
-        fields = ('id', 'fantasy_name', 'cnpj', 'email', 'phone', 'qrcode_identification','owner')
-    
+        fields = ('id', 'fantasy_name', 'cnpj', 'email', 'phone', 'qrcode_identification','color','image','owner')
+        extra_fields = {
+            "color" : {"required":False}
+        }
+
+class ProductIngredientSerializer(serializers.ModelSerializer):
+    product_ingredient_id = serializers.IntegerField(source='id', required=False)
+
+    class Meta:
+        model = ProductIngredient
+        fields = ['product_ingredient_id','grams','ingredient']
+
+
+class IngredientOrderSerializer(serializers.ModelSerializer):
+    ingredient_order_id = serializers.IntegerField(source='id', required=False)
+
+    class Meta:
+        model = IngredientOrder
+        fields = ['ingredient_order_id','quantity','is_selected','ingredient']
+
+
+class IngredientSerializer(serializers.ModelSerializer):
+    image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)
+    class Meta:
+        model = Ingredient
+        fields = ('id','name','is_additional',"status","image","company")
+        extra_fields = {
+            "image":{"required":False}
+        }
+        
 
 class CategorySerializer(serializers.ModelSerializer):
+    image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)
     class Meta:
         model = Category
-        fields = ['id','name', 'company']
+        fields = ['id','name', 'color','image','company']
 
 
 class AttributeSerializer(serializers.ModelSerializer):
@@ -77,13 +106,17 @@ class AttributeSerializer(serializers.ModelSerializer):
         model = Attribute
         fields = ['id','name','status','is_additional','image','company']
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductSerializer(WritableNestedModelSerializer):
     image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)
     attribute = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Attribute.objects.all())
+    ingredient = ProductIngredientSerializer(source='productingredient_set',many=True)
 
     class Meta:
         model = Product
-        fields = ["id","name", "description", "price", "status", "image", "company", "category","attribute"]
+        fields = ["id","name", "description", "price", "status", "image", "company", "category","attribute","ingredient"]
+        extra_fields = {
+            "ingredient":{"required":False}
+        }
 
 class TableSerializer(serializers.ModelSerializer):
     class Meta:
@@ -96,13 +129,6 @@ class AvaliationSerializer(serializers.ModelSerializer):
         fields = ['id','note', 'client', 'product', 'company']
 
 
-class OrderAttributeSerializer(serializers.ModelSerializer):
-    order_attribute_id = serializers.IntegerField(source='id', required=False)
-
-    class Meta:
-        model = OrderAttribute
-        fields = ['id','order_attribute_id','status','quantity','attribute']
-
 class ProductOrderSerializer(serializers.ModelSerializer):
     product_order_id = serializers.IntegerField(source='id', required=False)
 
@@ -112,13 +138,14 @@ class ProductOrderSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(WritableNestedModelSerializer):
     product = ProductOrderSerializer(source='productorder_set',many=True)
-    attribute = OrderAttributeSerializer(source='orderattribute_set',many=True, required=False)
+    attribute = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Attribute.objects.all())
     client = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Client.objects.all())
     employee = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Employee.objects.all())
+    ingredient = IngredientOrderSerializer(source='ingredientorder_set', many=True)
 
     class Meta:
         model = Order
-        fields = ['id','to_do','doing','done','client','employee','company','table','product','attribute']
+        fields = ['id','to_do','doing','done','client','employee','company','table','product','attribute','ingredient']
 
 
 class OwnerSerializer(serializers.ModelSerializer): 
@@ -137,11 +164,16 @@ class ClientSerializer(serializers.ModelSerializer):
     groups = serializers.PrimaryKeyRelatedField(required=False, many=True, read_only=False, queryset=Group.objects.all()) 
     
     password = serializers.CharField(write_only = True) 
-    email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])
-
+    email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())], required=False)
+    
     class Meta:
         model = Client
         fields = ['id','password','username','first_name',"last_name",'email','cpf','phone','address','is_staff','user_permissions','groups']  
+        extra_kwargs = {
+            "cpf": {"required":False},
+            "address": {"required":False},
+            "last_name": {"required":False}
+        }
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
