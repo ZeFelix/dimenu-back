@@ -30,7 +30,7 @@ class Company(models.Model):
         # file will be uploaded to MEDIA_ROOT/product/id/<filename>
         return 'company/{0}/{1}'.format(instance.id, filename)  
 
-    fantasy_name = models.CharField('Fantasy name', max_length=45, default="company default")
+    fantasy_name = models.CharField('Fantasy name', max_length=45, default="company default", unique=True)
     cnpj = models.CharField('CNPJ', max_length=45, unique=True)
     email = models.EmailField('Email', max_length=45, unique=True)
     phone = models.CharField('Phone',max_length=45)
@@ -38,6 +38,9 @@ class Company(models.Model):
     image = models.ImageField("Log of Company", upload_to=company_directory_path, blank=True, null=True)
     owner = models.name = models.ForeignKey(Owner, on_delete=models.CASCADE, blank=True, null=True)
     color = models.CharField("Color of the company", max_length=50, blank=True, null=True, default="#ffffff")
+    city  = models.CharField("City",max_length=50, default="Barbalha")
+    state = models.CharField("State", max_length=5, default="CE")
+    
 
     created_at = models.DateTimeField('Created at', auto_now_add=True)
     updated_at = models.DateTimeField('Updated at', auto_now=True)
