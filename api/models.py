@@ -231,4 +231,4 @@ class Avaliation(models.Model):
 
 
     def __str__(self):
-        return "Avaliation of the user - " + self.user.username
+        return "Avaliation of the user - " + self.user.client
