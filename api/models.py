@@ -228,4 +228,4 @@ class Avaliation(models.Model):
 
 
     def __str__(self):
-        return "Avaliation of the user - " + self.user.username
+        return "User - {}, Note: {}; Produto: {}".format(self.client.username, self.note, self.product)

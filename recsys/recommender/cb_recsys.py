@@ -93,10 +93,10 @@ movies, ratings = loadData()
 
 # Lista de filmes de avaliações dos filmes assistidos
 userInput = [                    
-    # {'title': 'Iron Man', 'rating': 4.5},
+    {'title': 'Iron Man', 'rating': 4.5},
     {'title': 'Avengers: Age of Ultron', 'rating': 5},
-    # {'title': 'Ant-Man', 'rating':5},            
-    # {'title': 'Guardians of the Galaxy', 'rating': 5},
+    {'title': 'Ant-Man', 'rating':5},            
+    {'title': 'Guardians of the Galaxy', 'rating': 5},
     # {'title': 'X-Men Origins: Wolverine', 'rating': 2},
     # {'title': 'Thor: The Dark World', 'rating': 4},
     {'title': 'Dracula', 'rating': 5},
