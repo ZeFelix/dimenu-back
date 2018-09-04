@@ -1,9 +1,34 @@
-import requests
-import json
-import random
+from django.conf import settings
+import requests, json, random, redis
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group 
 from api.models import Client, Avaliation, Product, Company
+from recsys.recommender import svd
+import pandas as pd
+
+redisInstance = redis.StrictRedis(
+  host=settings.REDIS_HOST,
+  port=settings.REDIS_PORT, 
+  db=settings.REDIS_DB
+)
+
+def setDataInRedis():
+    preds, products, ratings = svd.loadData()
+
+    redisInstance.setex('preds', 1800, preds.to_msgpack())
+    redisInstance.setex('products', 1800, products.to_msgpack())
+    redisInstance.setex('ratings', 1800, ratings.to_msgpack())
+
+    return preds, products, ratings
+
+
+def getDataFromRedis():
+    preds = pd.read_msgpack(redisInstance.get('preds'))
+    products = pd.read_msgpack(redisInstance.get('products'))
+    ratings = pd.read_msgpack(redisInstance.get('ratings'))
+
+    return preds, products, ratings
+
 
 def getUsers():
     url = 'https://randomuser.me/api?nat=br&results=10&exc=location,dob,id,picture,gender'
@@ -72,7 +97,7 @@ def fakeCPF():
 
 
 def getPessoas():
-  url = 'https://randomuser.me/api?nat=br&results=100&exc=location,dob,id,picture,gender'
+  url = 'https://randomuser.me/api?nat=br&results=1&exc=location,dob,id,picture,gender'
 
 
   req = requests.get(url)
@@ -121,7 +146,7 @@ def gerarAvaliacoes():
   for cliente in clientes:    
     print(cliente.id)
     produtos_avaliados = []
-    num_avaliacoes = random.randint(0, 5)
+    num_avaliacoes = random.randint(0, len(produtos))
     if num_avaliacoes > 0:
       for j in range(num_avaliacoes):
         produto = random.choice(produtos)

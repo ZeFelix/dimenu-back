@@ -60,6 +60,8 @@ def getUserPreferences(userData, products):
 
     ingredientTable = ingredientTable.drop('id', 1).drop('name', 1).drop('ingredients', 1)
 
+    userProfile = userProfile.sort_values(ascending=False)
+
     return ingredientTable, userProfile
 
 
@@ -72,4 +74,5 @@ def recommend(ingredientTable, userProfile, products):
     print(recommendationTable_df.head())
     # Gera a lista de recomendações
     recomendacoes = products.loc[products['id'].isin(recommendationTable_df.head(10).keys())]
+    print('=' * 110)
     print(recomendacoes)
