@@ -29,16 +29,22 @@ def cb(request):
     products = loadData()
 
     userdata = [
-        {'name': 'Baiana', 'note': 5},
+        {'name': 'Baiana', 'views': 3},
+        {'name': 'Portuguesa', 'views': 1},
+        {'name': '4 Queijos', 'views': 4},
     ]
 
     userInput = pd.DataFrame(userdata)
+    
+    print("\nVocê viu esses items: \n")
+    print(userInput.head())
 
-    ingredientTable, userProfile = getUserPreferences(userInput, products)
+    print("=" * 120, '\n')
+    ingredientTable, userProfile = getUserPreferences(userInput, products)    
 
-    print(userProfile)
-
-    recommend(ingredientTable, userProfile, products)
+    print("Baseado no se histórico, recomendamos os seguintes items: \n ")
+    recommend(ingredientTable, userProfile, products, userInput)
+    print("=" * 120, '\n')
 
     return HttpResponse('CB Recsys')
 
@@ -78,34 +84,34 @@ def svd_rec(request):
 
     try:
         already_rated, predictions = svd.recommend_products(
-            preds, 150, products, ratings, 5)
+            preds, 110, products, ratings, 5)
 
         already_rated = already_rated.drop('rating', 1).drop('userId', 1)
 
-        print('O usuário {} já avaliou {} produtos.'.format(150, len(already_rated)))
+        print('O usuário {} já avaliou {} produtos.'.format(110, len(already_rated)))
         print(already_rated.head())
         print("=" * 120 + '\n')
         print('Recomendando os {} produtos mais bem avaliados.'.format(5) + '\n')
         print(predictions)
         print("=" * 120)
 
-        # reader = Reader()
+        reader = Reader()
 
-        # data = Dataset.load_from_df(
-        #     ratings[['userId', 'productId', 'rating']], reader)
+        data = Dataset.load_from_df(
+             ratings[['userId', 'productId', 'rating']], reader)
 
-        # data.split(n_folds=5)
+        data.split(n_folds=4)
 
-        # svd_algo = SVD()
+        svd_algo = SVD()
 
-        # print(evaluate(svd_algo, data, measures=['RMSE']))
+        print(evaluate(svd_algo, data, measures=['RMSE']))
 
-        # print(ratings[ratings['userId'] == 202])
+        print(ratings[ratings['userId'] == 110])
 
-        # trainset = data.build_full_trainset()
-        # svd_algo.train(trainset)
+        trainset = data.build_full_trainset()
+        svd_algo.train(trainset)
 
-        # print(svd_algo.predict(202, 20))
+        print(svd_algo.predict(110, 4))
 
     except Exception as e:
         print("Erro ao gerar recomendacoes")

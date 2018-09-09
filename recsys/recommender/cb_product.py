@@ -7,14 +7,8 @@ def loadData():
     Carrega os dados dos produtos e avaliações do banco.
     Trata os dados e retorna os produtos e avaliações.
     """
-    company = Company.objects.get(pk=2)
-    # avaliations = Avaliation.objects.filter(company=company)
-    products = Product.objects.filter(company=company)
-
-    # avaliation_df = read_frame(
-    #   avaliations, 
-    #   fieldnames=['id', 'note', 'product', 'client', 'company']
-    # )
+    company = Company.objects.get(pk=2)    
+    products = Product.objects.filter(company=company)    
 
     dataframe = []
     # Cria uma lista de produtos personalizada
@@ -54,7 +48,9 @@ def getUserPreferences(userData, products):
 
     userIngredientTable = userProducts.drop('id', 1).drop('name', 1).drop('ingredients', 1)    
 
-    userProfile = userIngredientTable.transpose().dot(inputProducts['note'])  
+    # Reorganiza a matriz, transformando linhas em colunas e vice-versa
+    # Multiplica a matriz pelo número de views de cada produto
+    userProfile = userIngredientTable.transpose().dot(inputProducts['views'])
 
     ingredientTable = products.set_index(products['id'])
 
@@ -65,14 +61,22 @@ def getUserPreferences(userData, products):
     return ingredientTable, userProfile
 
 
-def recommend(ingredientTable, userProfile, products):
+def recommend(ingredientTable, userProfile, products, userInput):
+    
+    products_seen = userInput.name.tolist()
+
     # Multiplica os gêneros pelos pesos para calcular a média ponderada
-    recommendationTable_df = ((ingredientTable*userProfile).sum(axis=1))/(userProfile.sum())
+    recommendationTable_df = ((ingredientTable * userProfile).sum(axis=1)) / (userProfile.sum())
 
     # Ordena em ordem decrescente
     recommendationTable_df = recommendationTable_df.sort_values(ascending=False)    
-    print(recommendationTable_df.head())
+
     # Gera a lista de recomendações
     recomendacoes = products.loc[products['id'].isin(recommendationTable_df.head(10).keys())]
-    print('=' * 110)
-    print(recomendacoes)
+    
+    for p in products_seen:
+      recomendacoes = recomendacoes[recomendacoes.name != p]
+
+    recomendacoes = recomendacoes[['id', 'ingredients', 'name']]
+
+    print(recomendacoes.head())
