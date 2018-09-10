@@ -114,7 +114,11 @@ class ClientListCompanies(APIView):
     """
 
     def get(self, request, format = None):
-        companies = Company.objects.all()
+        try:
+            city = request.GET["city"]
+            companies = Company.objects.filter(city__iexact=city)
+        except Exception:
+            companies = Company.objects.all()
         serializer = CompanySerializer(companies, many = True)
         return Response(serializer.data)
 

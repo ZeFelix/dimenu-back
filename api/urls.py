@@ -28,7 +28,7 @@ urlpatterns = [
     path('clients/companies/<int:pk>/products',ClientListProducts.as_view()),
     path('clients/companies/<int:pk>/products/<int:product_pk>/attributes',ClientListAttributesByProducts.as_view()),
     path('clients/companies/<int:pk>/categories',ClientListCategories.as_view()),
-    path('clients/companies/<int:pk>/categories/<int:category_id/products',ClientListProductsByCategories.as_view()),
+    path('clients/companies/<int:pk>/categories/<int:category_id>/products',ClientListProductsByCategories.as_view()),
 
     path('companies/<int:company_id>/categories', CategoryList.as_view()),
     path('companies/<int:company_id>/categories/<int:pk>', CategoryDetail.as_view()),
