@@ -126,6 +126,9 @@ class CompanyOverView(APIView):
         number_employees = employees.filter().count()
         number_tables = tables.filter(available=True).count()
         number_orders_today = orders_today.filter().count()
+        number_orders_today_to_do = orders_today.filter(to_do=True).count()
+        number_orders_today_doing = orders_today.filter(doing=True).count()
+        number_orders_today_done = orders_today.filter(done=True).count()
         number_ingredients = ingredients.filter(status=True).count()
         number_attributes = attributes.filter(status=True).count()
         number_categories = categories.filter(status=True).count()
@@ -142,6 +145,9 @@ class CompanyOverView(APIView):
             "number_employees" :number_employees,
             "number_tables" : number_tables,
             "number_orders_today" : number_orders_today,
+            "number_orders_today_to_do" : number_orders_today_to_do,
+            "number_orders_today_doing" : number_orders_today_doing,
+            "number_orders_today_done" : number_orders_today_done,
             "number_ingredients" : number_ingredients,
             "number_attributes" : number_attributes,
             "number_categories" : number_categories,
