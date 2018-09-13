@@ -1,17 +1,19 @@
-from django.shortcuts import render
-from api.models import *
-from api.serializers import ClientSerializer, CompanySerializer, ProductSerializer, AttributeSerializer, CategorySerializer
-from django.http import Http404, JsonResponse
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.core.exceptions import ObjectDoesNotExist
-from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
-from rest_framework_simplejwt.authentication import JWTAuthentication
-#encryptografia 
-from django.contrib.auth.hashers import make_password 
-from django.contrib.auth.models import Group 
 from api.custom_permissions import CustomPermissionsClient
+from api.models import *
+from api.serializers import AttributeSerializer, CategorySerializer, \
+    ClientSerializer, CompanySerializer, IngredientSerializer, \
+    ProductSerializer
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import Group
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404, JsonResponse
+from django.shortcuts import render
+from rest_framework import status
+from rest_framework.permissions import DjangoModelPermissions, \
+    IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class RegisterClient(APIView):
@@ -167,7 +169,18 @@ class ClientListAttributesByProducts(APIView):
     Classe para visualizar os atributos daquela empresa que sejam adicionais
     """
 
-    def  get(self, request, pk, product_pk):
-        attribute = Attribute.objects.filter(product=product_pk)
+    def  get(self, request, pk, product_id):
+        attribute = Attribute.objects.filter(product=product_id)
         serializer = AttributeSerializer(attribute, many=True)
+        return Response(serializer.data)
+
+class ClientListIngredientByProducts(APIView):
+    """
+    Classe para visualizar todos os ingredientes de determinado produto
+    """
+
+    def get(self, reuest, pk, product_id):
+        products = Product.objects.filter(company=pk).get(pk=product_id)
+        ingredients = products.ingredient.all()
+        serializer = IngredientSerializer(ingredients, many=True, context={"product_id":product_id})
         return Response(serializer.data)

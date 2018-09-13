@@ -84,12 +84,29 @@ class IngredientOrderSerializer(serializers.ModelSerializer):
 
 class IngredientSerializer(serializers.ModelSerializer):
     image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)
+
     class Meta:
         model = Ingredient
         fields = ('id','name','is_additional',"status","image","company")
         extra_fields = {
             "image":{"required":False}
         }
+    
+    def to_representation(self, instance):
+        """
+        Método para atribuir na representação do ingredient as gramas daquele ingrediente em determinado produto,
+        caso exista grama,
+        o id do produto é passado pela variável context da view
+        """
+        representation = super().to_representation(instance)
+        product_id = self.context.get("product_id")
+        try:
+            product_ingredient = ProductIngredient.objects.filter(ingredient=instance.id, product=product_id).first()
+            representation["grams"] = product_ingredient.grams
+        except Exception as e:
+            pass
+
+        return  representation
         
 
 class CategorySerializer(serializers.ModelSerializer):
