@@ -136,8 +136,8 @@ class ProductSerializer(WritableNestedModelSerializer):
     
     def to_representation(self, instance):
         """
-        Método para atribuir na representação do ingredient as gramas daquele ingrediente em determinado produto,
-        caso exista grama,
+        Método para adicionar na representação do product o ingredient as gramas daquele ingrediente,
+        e adicionar os attributes
         o id do produto é passado pela variável context da view
         """
     #   "ingredient": [
