@@ -146,13 +146,16 @@ class ProductSerializer(WritableNestedModelSerializer):
     #             "grams": 103,
     #             "ingredient": 1
     #         }]
-        representation = super(ProductSerializer,self).to_representation(instance)
-        ingredient_serializer_data = IngredientSerializer(instance.ingredient,many=True).data
+        product_representation = super(ProductSerializer,self).to_representation(instance)
+        context = {
+            "product_id":product_representation["id"]
+            }
+        ingredient_serializer_data = IngredientSerializer(instance.ingredient, context=context, many=True).data
         attribute_serializer_data = AttributeSerializer(instance.attribute,many=True).data
 
-        representation["attribute"] = attribute_serializer_data
-        representation["ingredient"]= ingredient_serializer_data
-        return representation
+        product_representation["attribute"] = attribute_serializer_data
+        product_representation["ingredient"]= ingredient_serializer_data
+        return product_representation
 
 
 class TableSerializer(serializers.ModelSerializer):
