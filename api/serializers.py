@@ -1,10 +1,9 @@
+from django.contrib.auth.models import Group, Permission, User
+from api.models import *
+from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from api.models import *
-from django.contrib.auth.models import Permission, Group, User
 
-# realiza as relações de muitos relacionamentos
-from drf_writable_nested import WritableNestedModelSerializer
 
 class Base64ImageField(serializers.ImageField):
     """
@@ -134,6 +133,27 @@ class ProductSerializer(WritableNestedModelSerializer):
         extra_fields = {
             "ingredient":{"required":False}
         }
+    
+    def to_representation(self, instance):
+        """
+        Método para atribuir na representação do ingredient as gramas daquele ingrediente em determinado produto,
+        caso exista grama,
+        o id do produto é passado pela variável context da view
+        """
+    #   "ingredient": [
+    #         {
+    #             "product_ingredient_id": 1,
+    #             "grams": 103,
+    #             "ingredient": 1
+    #         }]
+        representation = super(ProductSerializer,self).to_representation(instance)
+        ingredient_serializer_data = IngredientSerializer(instance.ingredient,many=True).data
+        attribute_serializer_data = AttributeSerializer(instance.attribute,many=True).data
+
+        representation["attribute"] = attribute_serializer_data
+        representation["ingredient"]= ingredient_serializer_data
+        return representation
+
 
 class TableSerializer(serializers.ModelSerializer):
     class Meta:
