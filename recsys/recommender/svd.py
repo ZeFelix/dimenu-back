@@ -3,9 +3,9 @@ import numpy as np
 from scipy.sparse.linalg import svds
 from api.models import Company, Product, Avaliation
 
-def loadData():
-    # Lê a base de dados de filmes e avaliações
-    company = Company.objects.get(pk=2)
+def loadData(companyID):
+    # Lê a base de dados de produtos e avaliações
+    company = Company.objects.get(pk=companyID)
     avaliations = Avaliation.objects.filter(company=company)
     products = Product.objects.filter(company=company)
 
@@ -22,11 +22,15 @@ def loadData():
     pdf = []
     # Cria uma lista de produtos personalizada
     for p in products:
+        img = ''
+        if p.image:
+          img = p.image.url
         pdf.append(
             {
                 'productId': p.id,
                 'name': p.name,
-                'ingredients': list(p.ingredient.values_list('name', flat=True))
+                'ingredients': list(p.ingredient.values_list('name', flat=True)),
+                'image': img
             }
         )
 
@@ -42,7 +46,7 @@ def loadData():
     userRatingsMean = np.mean(R, axis = 1)
     ratingsDemeaned = R - userRatingsMean.reshape(-1, 1)
 
-    # Obtem o número de usuários e filmes únicos
+    # Obtem o número de usuários e produtos únicos
     n_users = ratings_df['userId'].unique().shape[0]
     n_products = ratings_df['productId'].unique().shape[0]
 
@@ -86,7 +90,7 @@ def recommend_products(predictions, userID, products, original_ratings, num_reco
                        iloc[:num_recommendations, :-1]
                       )
 
-    recommendations = recommendations.drop('productId', 1)
+    # recommendations = recommendations.drop('productId', 1)
     user_full = user_full.drop('productId', 1)
     
     return user_full, recommendations

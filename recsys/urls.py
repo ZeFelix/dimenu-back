@@ -7,5 +7,5 @@ urlpatterns = [
     path('addRatings', addRatings),
     path('cb/', cb),
     path('cf/', cf),
-    path('svd/', svd_rec)
+    path('company/<int:companyID>/user/<int:userID>/svd/', svd_rec)
 ]
