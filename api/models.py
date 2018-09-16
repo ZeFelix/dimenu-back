@@ -109,6 +109,7 @@ class Category(models.Model):
     name = models.CharField('Name',max_length=45)
     color = models.CharField(max_length=45, blank=True, null=True)
     image = models.ImageField("Image of the Category", upload_to=category_directory_path, blank=True, null=True)
+    status = models.BooleanField("Status of the category",default=True)
     company = models.ForeignKey(Company,on_delete=models.CASCADE)
 
     created_at = models.DateTimeField('Created at', auto_now_add=True)

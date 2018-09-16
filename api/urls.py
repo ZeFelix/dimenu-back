@@ -11,7 +11,7 @@ from api.views.owner import RegisterOwner, OwnerDetail
 from api.views.client import (
     RegisterClient, ClientDetail, ClientListCompanies, ClientListProducts,
     ClientListCategories, ClientListProductsByCategories, ClientListAttributes,
-    ClientListAttributesByProducts
+    ClientListAttributesByProducts, ClientListIngredientByProducts
 )
 from api.views.employee import EmployeeDetail, EmployeeList
 from api.views.user import UserDetail
@@ -26,7 +26,8 @@ urlpatterns = [
     path('clients/companies',ClientListCompanies.as_view()),
     path('clients/companies/<int:pk>/attributes',ClientListAttributes.as_view()),
     path('clients/companies/<int:pk>/products',ClientListProducts.as_view()),
-    path('clients/companies/<int:pk>/products/<int:product_pk>/attributes',ClientListAttributesByProducts.as_view()),
+    path('clients/companies/<int:pk>/products/<int:product_id>/attributes',ClientListAttributesByProducts.as_view()),
+    path('clients/companies/<int:pk>/products/<int:product_id>/ingredients',ClientListIngredientByProducts.as_view()),
     path('clients/companies/<int:pk>/categories',ClientListCategories.as_view()),
     path('clients/companies/<int:pk>/categories/<int:category_id>/products',ClientListProductsByCategories.as_view()),
 
