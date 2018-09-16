@@ -104,20 +104,57 @@ class CompanyOverView(APIView):
 
     def get(self, request, company_id):
         """
-        Busca da empresa:
+        Busca da empresa (disponíveis e não):
             quantidade de produtos;
             quantidade de funcionários;
             quantidade de mesas;
-            quantidade de pedidos da data atual.
+            quantidade de pedidos da data atual;
+            quantidade de ingredientes;
+            quantidade de atributos;
+            quantidade de categoriais.
         """
-        number_products = Product.objects.filter(company=company_id).count()
-        number_employees = Employee.objects.filter(company=company_id).count()
-        number_tables = Table.objects.filter(company=company_id).count()
-        number_orders_today = Order.objects.filter(company=company_id,created_at__date=timezone.now().date()).count()
+        products = Product.objects.filter(company_id=company_id)
+        employees = Employee.objects.filter(company_id=company_id)
+        tables = Table.objects.filter(company_id=company_id)
+        orders_today = Order.objects.filter(company_id=company_id,created_at__date=timezone.now().date())
+        ingredients = Ingredient.objects.filter(company_id=company_id)
+        attributes = Attribute.objects.filter(company_id=company_id)
+        categories = Category.objects.filter(company_id=company_id)
+        
+        """---------------disponivéis-----------"""
+        number_products = products.filter(status=True).count()
+        number_employees = employees.filter().count()
+        number_tables = tables.filter(available=True).count()
+        number_orders_today = orders_today.filter().count()
+        number_orders_today_to_do = orders_today.filter(to_do=True).count()
+        number_orders_today_doing = orders_today.filter(doing=True).count()
+        number_orders_today_done = orders_today.filter(done=True).count()
+        number_ingredients = ingredients.filter(status=True).count()
+        number_attributes = attributes.filter(status=True).count()
+        number_categories = categories.filter(status=True).count()
+        
+        """-------------indisponíveis----------------"""
+        number_products_unavailable = products.filter(status=False).count()
+        number_tables_unavailable = tables.filter(available=False).count()
+        number_ingredients_unavailable = ingredients.filter(status=False).count()
+        number_attributes_unavailable = attributes.filter(status=False).count()
+        number_categories_unavailable = categories.filter(status=False).count()
+
         context = {
             "number_products" : number_products,
             "number_employees" :number_employees,
             "number_tables" : number_tables,
-            "number_orders_today" :number_orders_today
+            "number_orders_today" : number_orders_today,
+            "number_orders_today_to_do" : number_orders_today_to_do,
+            "number_orders_today_doing" : number_orders_today_doing,
+            "number_orders_today_done" : number_orders_today_done,
+            "number_ingredients" : number_ingredients,
+            "number_attributes" : number_attributes,
+            "number_categories" : number_categories,
+            "number_products_unavailable" : number_products_unavailable,
+            "number_tables_unavailable" : number_tables_unavailable,
+            "number_ingredients_unavailable" : number_ingredients_unavailable,
+            "number_attributes_unavailable" : number_attributes_unavailable,
+            "number_categories_unavailable" : number_categories_unavailable
         }
         return JsonResponse(context)

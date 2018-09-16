@@ -1,10 +1,9 @@
+from django.contrib.auth.models import Group, Permission, User
+from api.models import *
+from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from api.models import *
-from django.contrib.auth.models import Permission, Group, User
 
-# realiza as relações de muitos relacionamentos
-from drf_writable_nested import WritableNestedModelSerializer
 
 class Base64ImageField(serializers.ImageField):
     """
@@ -84,19 +83,36 @@ class IngredientOrderSerializer(serializers.ModelSerializer):
 
 class IngredientSerializer(serializers.ModelSerializer):
     image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)
+
     class Meta:
         model = Ingredient
         fields = ('id','name','is_additional',"status","image","company")
         extra_fields = {
             "image":{"required":False}
         }
+    
+    def to_representation(self, instance):
+        """
+        Método para atribuir na representação do ingredient as gramas daquele ingrediente em determinado produto,
+        caso exista grama,
+        o id do produto é passado pela variável context da view
+        """
+        representation = super().to_representation(instance)
+        product_id = self.context.get("product_id")
+        try:
+            product_ingredient = ProductIngredient.objects.filter(ingredient=instance.id, product=product_id).first()
+            representation["grams"] = product_ingredient.grams
+        except Exception as e:
+            pass
+
+        return  representation
         
 
 class CategorySerializer(serializers.ModelSerializer):
     image = Base64ImageField(max_length = None,use_url = True, required = False, allow_null = True)
     class Meta:
         model = Category
-        fields = ['id','name', 'color','image','company']
+        fields = ['id','name', 'color','image','company',"status"]
 
 
 class AttributeSerializer(serializers.ModelSerializer):
@@ -117,6 +133,30 @@ class ProductSerializer(WritableNestedModelSerializer):
         extra_fields = {
             "ingredient":{"required":False}
         }
+    
+    def to_representation(self, instance):
+        """
+        Método para adicionar na representação do product o ingredient as gramas daquele ingrediente,
+        e adicionar os attributes
+        o id do produto é passado pela variável context da view
+        """
+    #   "ingredient": [
+    #         {
+    #             "product_ingredient_id": 1,
+    #             "grams": 103,
+    #             "ingredient": 1
+    #         }]
+        product_representation = super(ProductSerializer,self).to_representation(instance)
+        context = {
+            "product_id":product_representation["id"]
+            }
+        ingredient_serializer_data = IngredientSerializer(instance.ingredient, context=context, many=True).data
+        attribute_serializer_data = AttributeSerializer(instance.attribute,many=True).data
+
+        product_representation["attribute"] = attribute_serializer_data
+        product_representation["ingredient"]= ingredient_serializer_data
+        return product_representation
+
 
 class TableSerializer(serializers.ModelSerializer):
     class Meta:
