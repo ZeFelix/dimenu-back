@@ -21,6 +21,10 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = (ProductIngredient,) 
          
  
+class AvaliationAdmin(admin.ModelAdmin):
+    list_display = ('client', 'product', 'note', 'company')
+    list_filter = ('company', 'product', 'client')
+
 admin.site.register(Company) 
 admin.site.register(Table) 
 admin.site.register(Attribute) 
@@ -28,6 +32,6 @@ admin.site.register(Category)
 admin.site.register(Product, ProductAdmin) 
 admin.site.register(Order, OrderAdmin) 
 admin.site.register(Ingredient) 
-admin.site.register(Avaliation) 
+admin.site.register(Avaliation, AvaliationAdmin) 
 admin.site.register(Owner) 
 admin.site.register(Client) 

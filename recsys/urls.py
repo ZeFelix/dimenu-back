@@ -1,11 +1,9 @@
 from django.urls import path
 from .views import *
 
-urlpatterns = [
-    path('teste/', teste),
-    path('addUsers/', addUsers),
-    path('addRatings', addRatings),
-    path('cb/', cb),
-    path('cf/', cf),
-    path('company/<int:companyID>/user/<int:userID>/svd/', svd_rec)
+urlpatterns = [    
+    path('add_users/<int:numPessoas>/', addUsers),
+    path('company/<int:companyID>/add_ratings/', addRatings),
+    path('company/<int:companyID>/user/<int:userID>/get_recommends/', svd_rec),
+    path('contentbased_recommends/', cb),
 ]

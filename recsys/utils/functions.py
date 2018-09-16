@@ -104,8 +104,8 @@ def fakeCPF():
     )
 
 
-def getPessoas():
-    url = 'https://randomuser.me/api?nat=br&results=1&exc=location,dob,id,picture,gender'
+def getPessoas(numPessoas):
+    url = 'https://randomuser.me/api?nat=br&results={}&exc=location,dob,id,picture,gender'.format(numPessoas)
 
     req = requests.get(url)
     usuarios = []
@@ -128,8 +128,7 @@ def getPessoas():
     return usuarios
 
 
-def cadastrarClientes(users):
-    url = 'http://localhost:8000/api/clients/register'
+def cadastrarClientes(users):    
     group_client_ids = list(Group.objects.filter(
         name="client").values_list('id', flat=True))
 
@@ -143,19 +142,18 @@ def cadastrarClientes(users):
             phone=user['phone'],
         )
         cliente.save()
-        cliente.groups.set(group_client_ids)
-        # print(r.json())
+        cliente.groups.set(group_client_ids)        
 
 
-def gerarAvaliacoes():
-    empresa = Company.objects.get(pk=2)
+def gerarAvaliacoes(companyID):
+    empresa = Company.objects.get(pk=companyID)
     produtos = list(Product.objects.filter(company=empresa))
     clientes = list(Client.objects.all())
 
     for cliente in clientes:
         print(cliente.id)
         produtos_avaliados = []
-        num_avaliacoes = random.randint(0, len(produtos))
+        num_avaliacoes = random.randint(0, len(produtos) - 1)
         if num_avaliacoes > 0:
             for j in range(num_avaliacoes):
                 produto = random.choice(produtos)
@@ -164,7 +162,7 @@ def gerarAvaliacoes():
                     avaliacao = Avaliation(
                         company=empresa,
                         client=cliente,
-                        note=random.randint(1, 5),
+                        note=random.randint(1, 10),
                         product=produto
                     )
                     avaliacao.save()

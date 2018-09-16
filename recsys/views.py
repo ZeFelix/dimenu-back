@@ -11,17 +11,13 @@ import pandas as pd
 # Create your views here.
 
 
-def teste(request):
-    return HttpResponse("teste")
-
-
-def addUsers(request):
-    cadastrarClientes(getPessoas())
+def addUsers(request, numPessoas):
+    cadastrarClientes(getPessoas(numPessoas))
     return HttpResponse('Clientes cadastrados')
 
 
-def addRatings(request):
-    gerarAvaliacoes()
+def addRatings(request, companyID):
+    gerarAvaliacoes(companyID)
     return HttpResponse('Avaliações geradas')
 
 
@@ -35,12 +31,12 @@ def cb(request):
     ]
 
     userInput = pd.DataFrame(userdata)
-    
+
     print("\nVocê viu esses items: \n")
     print(userInput.head())
 
     print("=" * 120, '\n')
-    ingredientTable, userProfile = getUserPreferences(userInput, products)    
+    ingredientTable, userProfile = getUserPreferences(userInput, products)
 
     print("Baseado no se histórico, recomendamos os seguintes items: \n ")
     recommend(ingredientTable, userProfile, products, userInput)
@@ -89,14 +85,14 @@ def svd_rec(request, companyID, userID):
 
         already_rated = already_rated.drop('rating', 1).drop('userId', 1)
 
-        print('O usuário {} já avaliou {} produtos.'.format(userID, len(already_rated)))
+        print('O usuário {} já avaliou {} produtos.'.format(
+            userID, len(already_rated)))
         print(already_rated.head())
         print("=" * 120 + '\n')
         print('Recomendando os {} produtos mais bem avaliados.'.format(5) + '\n')
-        
+
         tmp = predictions.to_dict('records')
         response = tmp
-
 
         print(predictions)
         print("=" * 120)
@@ -104,7 +100,7 @@ def svd_rec(request, companyID, userID):
         reader = Reader()
 
         data = Dataset.load_from_df(
-             ratings[['userId', 'productId', 'rating']], reader)
+            ratings[['userId', 'productId', 'rating']], reader)
 
         data.split(n_folds=4)
 
