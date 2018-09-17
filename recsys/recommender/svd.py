@@ -58,7 +58,7 @@ def loadData(companyID):
     # U = Matriz unitária esquerda
     # E = Matriz diagonal (pesos)
     # Vt = Matriz unitária direita    
-    U, E, Vt = svds(ratingsDemeaned, k = 21)
+    U, E, Vt = svds(ratingsDemeaned, k = 5)
     E = np.diag(E)
 
     # Calcula SVD

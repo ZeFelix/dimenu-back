@@ -6,6 +6,7 @@ from recsys.recommender.cb_product import loadData, getUserPreferences, recommen
 from recsys.recommender import knn_recsys
 from recsys.recommender import cf_products
 from recsys.recommender import svd
+from surprise.model_selection import cross_validate
 from surprise import Reader, SVD, evaluate, Dataset
 import pandas as pd
 # Create your views here.
@@ -100,20 +101,18 @@ def svd_rec(request, companyID, userID):
         reader = Reader()
 
         data = Dataset.load_from_df(
-            ratings[['userId', 'productId', 'rating']], reader)
+            ratings[['userId', 'productId', 'rating']], reader)        
 
-        data.split(n_folds=4)
+        algo = SVD()
 
-        svd_algo = SVD()
+        cross_validate(algo, data, measures=['RMSE', 'MAE'], cv=5, verbose=True)
 
-        print(evaluate(svd_algo, data, measures=['RMSE']))
-
-        print(ratings[ratings['userId'] == userID])
+        # print(ratings[ratings['userId'] == userID])
 
         trainset = data.build_full_trainset()
-        svd_algo.train(trainset)
+        algo.fit(trainset)
 
-        print(svd_algo.predict(userID, 4))
+        algo.predict(userID, 12)
 
     except Exception as e:
         raise(e)
