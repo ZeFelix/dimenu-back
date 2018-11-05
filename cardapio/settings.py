@@ -96,11 +96,11 @@ DATABASES = {
 
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 #         'NAME': 'cardapio',
 #         'USER': 'postgres',
-#         'PASSWORD': 'joseph',
-#         'HOST': '127.0.0.1',
+#         'PASSWORD': 'admin',
+#         'HOST': 'db',
 #         'PORT': '5432',
 #     }
 # }

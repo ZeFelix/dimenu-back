@@ -9,6 +9,8 @@ from recsys.recommender import svd
 from surprise.model_selection import cross_validate
 from surprise import Reader, SVD, evaluate, Dataset
 import pandas as pd
+from recsys.recommender.iter_svd import Recommender
+from recsys.recommender.cb_recsys import run
 # Create your views here.
 
 
@@ -82,7 +84,7 @@ def svd_rec(request, companyID, userID):
 
     try:
         already_rated, predictions = svd.recommend_products(
-            preds, userID, products, ratings, 5)
+            preds, userID, products, ratings, 10)
 
         already_rated = already_rated.drop('rating', 1).drop('userId', 1)
 
@@ -98,21 +100,21 @@ def svd_rec(request, companyID, userID):
         print(predictions)
         print("=" * 120)
 
-        reader = Reader()
+        # reader = Reader()
 
-        data = Dataset.load_from_df(
-            ratings[['userId', 'productId', 'rating']], reader)        
+        # data = Dataset.load_from_df(
+        #     ratings[['userId', 'movieId', 'rating']], reader)
 
-        algo = SVD()
+        # algo = SVD()
 
-        cross_validate(algo, data, measures=['RMSE', 'MAE'], cv=5, verbose=True)
+        # cross_validate(algo, data, measures=['RMSE', 'MAE'], cv=5, verbose=True)
 
-        # print(ratings[ratings['userId'] == userID])
+        # # print(ratings[ratings['userId'] == userID])
 
-        trainset = data.build_full_trainset()
-        algo.fit(trainset)
+        # trainset = data.build_full_trainset()
+        # algo.fit(trainset)
 
-        algo.predict(userID, 12)
+        # algo.predict(userID, 12)
 
     except Exception as e:
         raise(e)
@@ -120,3 +122,22 @@ def svd_rec(request, companyID, userID):
         print("Erro ao gerar recomendacoes")
 
     return JsonResponse(response, safe=False)
+
+
+def iterSVD(request, companyID, userID):
+
+    recsys = Recommender(companyID=companyID, teta=0.0001)
+
+    if recsys.dataLoaded:
+        recsys.recommend(userID, 10)
+    else:
+        recsys.loadData(companyID)
+        recsys.itrSVD(companyID)
+        recsys.recommend(userID, 10)
+
+    return HttpResponse("Iter SVD")
+
+
+def cb_movies(request):
+    run()
+    return HttpResponse("CB Movies")
