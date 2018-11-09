@@ -38,24 +38,33 @@ def iterSVD(request, companyID, userID):
 # Híbrido
 def hybrid_recsys(request, companyID, userID):
     rated = recs = None
-    cfRecsys = CFRecommender(companyID=companyID, teta=0.0001, ml=False)
-    cbRecsys = CBRecommender(ml=False, hybrid=True)
+    movielens = True
+    hybrid = True
+
+    cfRecsys = CFRecommender(companyID=companyID, teta=0.0001, ml=movielens)
 
     # Se os dados já foram calculados
     if cfRecsys.dataLoaded:
         rated, recs = cfRecsys.recommend(userID, 10)
-        itens = cbRecsys.loadData(companyID, data=recs)
+        
+        cbRecsys = CBRecommender(ml=movielens, hybrid=hybrid, data=recs)
+        itens = cbRecsys.loadData(companyID, data=recs)    
         featTable, profile = cbRecsys.getUserPreferences(rated, itens)
-        cbRecsys.recommend(featTable, profile, itens, rated)
+        response = cbRecsys.recommend(featTable, profile, itens, rated)
+        response = response.to_dict('records')
+        return JsonResponse(response, safe=False)
 
     else:
         cfRecsys.loadData(companyID)
         cfRecsys.itrSVD(companyID)
         rated, recs = cfRecsys.recommend(userID, 10)
 
+        cbRecsys = CBRecommender(ml=movielens, hybrid=hybrid, data=recs)
         itens = cbRecsys.loadData(companyID, data=recs)
         featTable, profile = cbRecsys.getUserPreferences(rated, itens)
-        cbRecsys.recommend(featTable, profile, itens, rated)
+        response = cbRecsys.recommend(featTable, profile, itens, rated)
+        response = response.to_dict('records')
+        return JsonResponse(response, safe=False)
 
     return HttpResponse("Sistema híbrido")
 
@@ -75,9 +84,10 @@ def cb_recsys(request, companyID, userID):
         )
     rated = pd.DataFrame(adf)
 
-    cbRecsys = CBRecommender(ml=True, hybrid=False)
-    itens = cbRecsys.loadData(companyID, data=None)
+    cbRecsys = CBRecommender(ml=False, hybrid=False)
+    itens = cbRecsys.loadData(companyID, data=None)    
     featTable, profile = cbRecsys.getUserPreferences(rated, itens)
+    print(featTable)
     cbRecsys.recommend(featTable, profile, itens, rated)
 
     return HttpResponse("Sistema baseado em conteúdo")

@@ -140,16 +140,12 @@ class CFRecommender(object):
 
             pdf = []
             # Cria uma lista de produtos personalizada
-            for p in products:
-                img = ''
-                if p.image:
-                    img = p.image.url
+            for p in products:                
                 pdf.append(
                     {
                         'itemId': p.id,
                         'name': p.name,
-                        'features': list(p.ingredient.values_list('name', flat=True)),
-                        'image': img
+                        'features': list(p.ingredient.values_list('name', flat=True))                        
                     }
                 )
 
