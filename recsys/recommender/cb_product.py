@@ -27,7 +27,7 @@ class CBRecommender(object):
                     dataframe.at[index, feat] = 1
 
             # Para os generos não existentes nos filmes, marca o número 0
-            dataframeN = dataframe.fillna(0)
+            dataframeN = dataframe.fillna(0)            
             return dataframeN
 
         else:
@@ -70,8 +70,8 @@ class CBRecommender(object):
                     for feat in row['features']:
                         nDataframe[index,feat] = 1
 
-                # dataframe = dataframe.fillna(0)
-                # dataframe = dataframe.drop('timestamp', 1)
+                dataframe = dataframe.fillna(0)
+                dataframe = dataframe.drop('timestamp', 1)
 
                 return nDataframe
 
@@ -100,7 +100,6 @@ class CBRecommender(object):
 
         # Reorganiza a matriz, transformando linhas em colunas e vice-versa
         # Multiplica a matriz pelo número de views de cada produto
-
         userProfile = userIngredientTable.transpose().dot(inputProducts['rating'])
 
         ingredientTable = products.set_index(products['itemId'])
@@ -129,11 +128,16 @@ class CBRecommender(object):
         
         # Ordena em ordem decrescente
         recommendationTable_df = recommendationTable_df.sort_values(ascending=False)
-
+        
         # Gera a lista de recomendações
-        recomendacoes = products.loc[products['itemId'].isin(recommendationTable_df.keys()[:10])]
-        recomendacoes = recomendacoes[['name', 'features', 'rating']]
+        recomendacoes = products.loc[products['itemId'].isin(recommendationTable_df.keys()[:20])]
+        for p in products_seen:
+            recomendacoes = recomendacoes[recomendacoes.name != p]
 
+        if self.hybrid:
+            recomendacoes = recomendacoes[['name', 'features', 'rating']]
+        else:
+            recomendacoes = recomendacoes[['name', 'features']]
         print("\nRecomendações: \n")
-        print(recomendacoes)
-        return recomendacoes
+        print(recomendacoes.head(10))
+        return recomendacoes.head(10)

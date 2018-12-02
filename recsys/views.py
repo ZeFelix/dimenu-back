@@ -58,6 +58,10 @@ def hybrid_recsys(request, companyID, userID):
         cfRecsys.loadData(companyID)
         cfRecsys.itrSVD(companyID)
         rated, recs = cfRecsys.recommend(userID, 10)
+        
+        cfRecsys.showGraphic(data=cfRecsys.mseHist, y_label="Erro", x_label="Iterações", label="MSE")
+        cfRecsys.showGraphic(data=cfRecsys.error, y_label="Erro", x_label="Iterações", label="MAE")
+        cfRecsys.showGraphic(data=cfRecsys.rmseHist, y_label="Erro", x_label="Iterações", label="RMSE")
 
         cbRecsys = CBRecommender(ml=movielens, hybrid=hybrid, data=recs)
         itens = cbRecsys.loadData(companyID, data=recs)
@@ -84,7 +88,7 @@ def cb_recsys(request, companyID, userID):
         )
     rated = pd.DataFrame(adf)
 
-    cbRecsys = CBRecommender(ml=False, hybrid=False)
+    cbRecsys = CBRecommender(ml=True, hybrid=False)
     itens = cbRecsys.loadData(companyID, data=None)    
     featTable, profile = cbRecsys.getUserPreferences(rated, itens)
     print(featTable)

@@ -51,7 +51,7 @@ class CFRecommender(object):
             else:
                 print("Inicializando dados...")
                 # cA = np.nan_to_num(cA, 0)
-                # R = np.nan_to_num(R, 0)
+                R = np.nan_to_num(R, 0)
                 means = np.nanmean(a=cA, axis=1)
                 for i in range(cA.shape[0]):
                     cA[i][np.isnan(cA[i])] = means[i]    
@@ -75,14 +75,14 @@ class CFRecommender(object):
 
             print("Predicoes geradas.\n")
 
-            # tmp = np.copy(pA)
+            tmp = np.copy(pA)
 
-            # for i, j in zip(x, y):
-            #     tmp[i, j] = 0
+            for i, j in zip(x, y):
+                tmp[i, j] = 0
             
             print("Calculando taxa de erro...")
-            err = mae(y_pred=pA, y_true=cA)
-            mse_e = mse(y_pred=pA, y_true=cA)
+            err = mae(y_pred=tmp, y_true=R)
+            mse_e = mse(y_pred=tmp, y_true=R)
             rmse_e = sqrt(mse_e)
             print("Erro calculado.\n")
 
@@ -111,6 +111,7 @@ class CFRecommender(object):
                 self.mseHist.append(mse_e)
                 self.rmseHist.append(rmse_e)
                 self.difHist.append(abs(dif))        
+
 
     def showGraphic(self, data, y_label=None, x_label=None, label=None):
         plt.grid()
@@ -155,9 +156,9 @@ class CFRecommender(object):
         
         else:
             self.products = pd.read_csv(
-                '/home/anderson/CodeEnv/Projetos/digimenu/recsys/recommender/data/movies.csv') #.sample(frac=0.2)
+                '/home/anderson/CodeEnv/Projetos/digimenu/recsys/recommender/data/tcc_products.csv') #.sample(frac=0.2)
             self.ratings = pd.read_csv(
-                '/home/anderson/CodeEnv/Projetos/digimenu/recsys/recommender/data/ratings.csv') #.sample(frac=0.2)
+                '/home/anderson/CodeEnv/Projetos/digimenu/recsys/recommender/data/tcc_ratings.csv') #.sample(frac=0.2)
 
         redisInstance.setex('company:{}:products'.format(companyID), 3600, self.products.to_msgpack())
         redisInstance.setex('company:{}:ratings'.format(companyID), 3600, self.ratings.to_msgpack())
@@ -166,6 +167,14 @@ class CFRecommender(object):
         Ratings = self.ratings.pivot_table(
             index='userId', columns='itemId', values='rating')
         
+        # Obtem o número de usuários e produtos únicos
+        n_users = self.ratings['userId'].unique().shape[0]
+        n_products = self.ratings['itemId'].unique().shape[0]
+
+        # Calcula a esparsidade dos dados
+        sparsity = round(1.0 - len(self.ratings) / float(n_users * n_products), 3)
+        print('Sparsity level: {}%'.format(sparsity * 100))
+
         # Gera uma matriz com os valores da base de dados
         self.idenMatrix = Ratings.values
        
@@ -217,7 +226,7 @@ class CFRecommender(object):
 
         # recommendations = recommendations.drop('movieId', 1)
         if self.ml:
-            user_full = user_full.drop('timestamp', 1).drop('userId', 1)
+            user_full = user_full.drop('userId', 1)
         else:
             user_full = user_full.drop('userId', 1)
 
