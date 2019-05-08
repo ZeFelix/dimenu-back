@@ -87,21 +87,10 @@ WSGI_APPLICATION = 'cardapio.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'cardapio',
-#         'USER': 'postgres',
-#         'PASSWORD': 'admin',
-#         'HOST': 'db',
-#         'PORT': '5432',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cardapio',
+        'NAME': 'dimenu',
         'USER': 'postgres',
         'PASSWORD': 'joseph',
         'HOST': '127.0.0.1',
