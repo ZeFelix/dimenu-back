@@ -1,6 +1,12 @@
-venv
+# Diretórios
+venv/*
+env/*
+staticfiles/*
+.vscode/*
+
+
+# Arquivos
 *.pyc
-staticfiles
 .env
 *.sqlite3
 *.csv
