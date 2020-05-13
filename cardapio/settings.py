@@ -203,8 +203,8 @@ SIMPLE_JWT = {
 }
 
 #aws amazon s3 configurações para armazenamento no aws amazon
-AWS_ACCESS_KEY_ID = 'AKIAIU4UVBITETVOYNUA'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCESS_KEY = ''
 AWS_S3_REGION_NAME = 'sa-east-1' 
 AWS_STORAGE_BUCKET_NAME = 'digimenu-media'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
