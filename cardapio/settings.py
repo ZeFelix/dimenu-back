@@ -9,11 +9,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
+###### Para uso com o sistema de recomendações ######
+# import redis
+
 import os
 import dj_database_url
 import django_heroku
 from datetime import timedelta
-import redis
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -212,7 +214,9 @@ MEDIAFILES_LOCATION = 'media'
 DEFAULT_FILE_STORAGE = 'cardapio.storage_backends.MediaStorage'
 
 
-# Configuração do Redis
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
-REDIS_DB = 0
+####### Configuração do Redis #######
+# Para uso com o sistema de recomendação
+
+# REDIS_HOST = 'localhost'
+# REDIS_PORT = 6379
+# REDIS_DB = 0

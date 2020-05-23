@@ -22,5 +22,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-    path('recsys/', include('recsys.urls'))
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Adicionar essa URL para usar o sistema de recomendações
+# path('recsys/', include('recsys.urls'))
