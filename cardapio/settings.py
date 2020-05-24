@@ -116,7 +116,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
-# https://docs.djangoproject.com/en/2.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -158,12 +157,8 @@ CORS_ALLOW_METHODS = (
     'POST', 
     'PUT', 
 ) 
-#CORS_ALLOW_METHODS = ['POST','GET','DELETE','OPTIONS','PUT'] 
 CORS_ALLOW_CREDENTIALS = True 
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
